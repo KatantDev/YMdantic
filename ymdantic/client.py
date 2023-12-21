@@ -6,6 +6,8 @@ from dataclass_rest.client_protocol import FactoryProtocol
 from dataclass_rest.http import aiohttp
 from dataclass_rest.http.aiohttp import AiohttpClient
 
+from .adapters.aiohttp_method import YMHttpMethod
+from .adapters.pydantic_factory import PydanticFactory
 from .exceptions import UndefinedUser
 from .models import (
     Response,
@@ -16,7 +18,6 @@ from .models import (
     TrackType,
     DownloadInfo,
 )
-from .adapters import PydanticFactory, YMHttpMethod
 
 T = TypeVar("T")
 

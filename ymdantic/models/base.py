@@ -1,7 +1,7 @@
 from pydantic import BaseModel, ConfigDict, model_validator
 from typing import Dict, Any
 
-from ymdantic.adapters import to_camel
+from ymdantic.adapters.to_camel import to_camel
 
 
 class YMBaseModel(BaseModel):

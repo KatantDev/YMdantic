@@ -1,5 +1,5 @@
 from json import JSONDecodeError
-from typing import Any, Dict
+from typing import Any
 
 from aiohttp import ClientResponse, ClientError
 from dataclass_rest.exceptions import ClientLibraryError, MalformedResponse

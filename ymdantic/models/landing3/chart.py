@@ -1,19 +1,19 @@
 from typing import List
 from pydantic import HttpUrl
 
-from ymdantic.models.playlists import YMBasePlaylistTrack
-from ymdantic.models.playlists import YMBasePlaylist
-from ymdantic.models.playlists import ShortPlaylist
+from ymdantic.models.playlists.playlist_track import BasePlaylistTrack
+from ymdantic.models.playlists.playlist import BasePlaylist
+from ymdantic.models.playlists.playlist import ShortPlaylist
 
 
-class ChartTrack(YMBasePlaylistTrack):
+class ChartTrack(BasePlaylistTrack):
     """Pydantic модель, представляющая трек в чарте."""
 
     play_count: int
     # Количество воспроизведений трека.
 
 
-class Chart(YMBasePlaylist):
+class Chart(BasePlaylist):
     """Pydantic модель, представляющая чарт."""
 
     description: str

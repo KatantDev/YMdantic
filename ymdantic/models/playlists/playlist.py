@@ -18,7 +18,7 @@ BackgroundColor = Annotated[
 ]
 
 
-class YMBasePlaylist(YMBaseModel):
+class BasePlaylist(YMBaseModel):
     """Pydantic модель, представляющая базовую информацию о плейлисте."""
 
     owner: PlaylistOwner
@@ -61,7 +61,7 @@ class YMBasePlaylist(YMBaseModel):
     # UUID плейлиста.
 
 
-class ShortPlaylist(YMBasePlaylist):
+class ShortPlaylist(BasePlaylist):
     """Pydantic модель, представляющая краткую информацию о плейлисте."""
 
     id_for_from: Optional[str] = None

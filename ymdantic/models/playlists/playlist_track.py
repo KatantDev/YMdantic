@@ -6,7 +6,7 @@ from ymdantic.models.chart_position import ChartPosition
 from ymdantic.models.tracks import TrackType
 
 
-class YMBasePlaylistTrack(YMBaseModel):
+class BasePlaylistTrack(YMBaseModel):
     """Pydantic модель, представляющая базовую информацию о треке в плейлисте."""
 
     id: int
@@ -21,7 +21,7 @@ class YMBasePlaylistTrack(YMBaseModel):
     # Позиция трека в чарте, если он в нём находится.
 
 
-class PlaylistTrack(YMBasePlaylistTrack):
+class PlaylistTrack(BasePlaylistTrack):
     """
     Pydantic модель, представляющая детальную информацию о треке в плейлисте.
     """

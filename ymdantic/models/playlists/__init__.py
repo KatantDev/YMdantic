@@ -1,12 +1,12 @@
 from .owner import PlaylistOwner
-from .playlist import ShortPlaylist, Playlist, YMBasePlaylist
-from .playlist_track import PlaylistTrack, YMBasePlaylistTrack
+from .playlist import ShortPlaylist, Playlist, BasePlaylist
+from .playlist_track import PlaylistTrack, BasePlaylistTrack
 from .tag import Tag
 from .playlist_cover import PlaylistCover
 
 __all__ = (
-    "YMBasePlaylist",
-    "YMBasePlaylistTrack",
+    "BasePlaylist",
+    "BasePlaylistTrack",
     "ShortPlaylist",
     "Playlist",
     "PlaylistOwner",

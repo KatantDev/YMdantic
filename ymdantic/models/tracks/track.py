@@ -2,7 +2,7 @@ from typing import List, Optional, Literal
 
 from pydantic import HttpUrl
 
-from ymdantic.models import Artist
+from ymdantic.models.artists import Artist
 from ymdantic.models.base import YMBaseModel, RemoveDeprecated
 from ymdantic.models.chart_position import ChartPosition
 from ymdantic.models.tracks.r128 import R128
@@ -17,7 +17,7 @@ AvailableForOptions = List[Literal["bookmate"]]
 TrackSource = Literal["OWN", "OWN_REPLACED_TO_UGC"]
 
 
-class YMBaseTrack(YMBaseModel, RemoveDeprecated):
+class BaseTrack(YMBaseModel, RemoveDeprecated):
     """Pydantic модель, представляющая базовую информацию о любом треке."""
 
     type: Literal["music", "asmr", "audiobook", "noise", "fairy-tale"]
@@ -84,7 +84,7 @@ class YMBaseTrack(YMBaseModel, RemoveDeprecated):
     # `get_album_with_tracks`).
 
 
-class UnavailableTrack(YMBaseTrack):
+class UnavailableTrack(BaseTrack):
     """
     Pydantic модель, представляющая недоступный трек.
 
@@ -124,7 +124,7 @@ class UnavailableTrack(YMBaseTrack):
     # может отсутствовать.
 
 
-class Track(YMBaseTrack):
+class Track(BaseTrack):
     available: Literal[True]
     # Доступность трека. В данном случае трек доступен.
     title: str
