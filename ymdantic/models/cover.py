@@ -1,0 +1,20 @@
+from typing import Optional, Literal
+
+from ymdantic.models.base import YMBaseModel
+
+
+class Cover(YMBaseModel):
+    """Pydantic модель, представляющая обложку альбома или артиста."""
+
+    type: Literal["from-artist-photos", "from-album-cover"]
+    # Тип обложки. Определяет источник обложки.
+    uri: str
+    # URI обложки. Это уникальный идентификатор, который можно использовать
+    # для получения изображения обложки.
+    prefix: str
+    # Префикс URI. Используется для формирования полного пути к изображению
+    # обложки.
+    copyright_name: Optional[str] = None
+    # Название правообладателя обложки. Используется очень редко.
+    copyright_cline: Optional[str] = None
+    # Копирайт обложки. Используется очень редко.
