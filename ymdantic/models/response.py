@@ -1,6 +1,11 @@
-from typing import TypeVar, Generic
+from typing import TypeVar, Generic, TYPE_CHECKING
 
 from pydantic import BaseModel, Field
+
+from ymdantic.mixins import ClientMixin
+
+if TYPE_CHECKING:
+    pass
 
 
 ResponseVar = TypeVar("ResponseVar")
@@ -22,7 +27,7 @@ class InvocationInfo(BaseModel):
     # Продолжительность выполнения запроса в миллисекундах.
 
 
-class Response(BaseModel, Generic[ResponseVar]):
+class Response(BaseModel, Generic[ResponseVar], ClientMixin):
     """Pydantic модель, представляющая ответ."""
 
     invocation_info: InvocationInfo = Field(alias="invocationInfo")

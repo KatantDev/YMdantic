@@ -1,4 +1,5 @@
 from json import JSONDecodeError
+from logging import getLogger
 from typing import Any
 
 from aiohttp import ClientResponse, ClientError
@@ -8,8 +9,45 @@ from dataclass_rest.http.aiohttp import AiohttpMethod
 from ymdantic.exceptions import YandexMusicError
 from ymdantic.models.error import YandexMusicErrorModel
 
+logger = getLogger(__name__)
+
 
 class YMHttpMethod(AiohttpMethod):
+    async def _pre_process_response(self, response: Any) -> Any:
+        """
+        Этот метод используется для предварительной обработки ответа от сервера.
+
+        Сначала он проверяет, является ли ответ корректным с помощью метода
+        `_response_ok`.
+        Если ответ не корректен, он вызывает метод `on_error` для
+        обработки ошибки.
+        Если ответ корректен, он извлекает тело ответа с помощью метода
+        `_response_body`.
+
+         Затем он пытается добавить клиента в тело ответа и загрузить тело ответа в
+         фабрику тел ответа.
+
+        Если во время этого процесса происходит какая-либо ошибка (ValueError,
+        TypeError, AttributeError), он вызывает исключение MalformedResponse.
+
+        :param response: Ответ, полученный от сервера.
+        :return: Обработанное тело ответа.
+        :raises MalformedResponse: Если во время обработки тела ответа происходит
+            ошибка.
+        """
+        if not await self._response_ok(response):
+            return await self.on_error(response)
+
+        body = await self._response_body(response)
+        try:
+            body["__client"] = self.client
+            return self.client.response_body_factory.load(
+                body,
+                self.method_spec.response_type,
+            )
+        except (ValueError, TypeError, AttributeError) as e:
+            raise MalformedResponse from e
+
     async def _on_error_default(self, response: ClientResponse) -> None:
         """
         Этот метод вызывается при получении ответа с кодом ошибки от 400 до 500.
