@@ -20,10 +20,10 @@ from ymdantic.models import (
 
 class YMClient(AiohttpClient):
     def __init__(
-            self,
-            token: str,
-            user_id: Optional[int] = None,
-            base_url: str = "https://api.music.yandex.net/",
+        self,
+        token: str,
+        user_id: Optional[int] = None,
+        base_url: str = "https://api.music.yandex.net/",
     ):
         self.user_id = user_id
         super().__init__(
@@ -43,28 +43,28 @@ class YMClient(AiohttpClient):
 
     @get("tracks/{track_id}")
     async def get_track_request(
-            self,
-            track_id: Union[int, str],
+        self,
+        track_id: Union[int, str],
     ) -> Response[List[TrackType]]:
         ...
 
     async def get_tracks(
-            self,
-            track_ids: List[Union[int, str]],
+        self,
+        track_ids: List[Union[int, str]],
     ) -> List[TrackType]:
         response = await self.get_tracks_request(track_ids=track_ids)
         return response.result
 
     @get("tracks")
     async def get_tracks_request(
-            self,
-            track_ids: List[Union[int, str]],
+        self,
+        track_ids: List[Union[int, str]],
     ) -> Response[List[TrackType]]:
         ...
 
     async def get_track_download_info(
-            self,
-            track_id: Union[int, str],
+        self,
+        track_id: Union[int, str],
     ) -> List[DownloadInfo]:
         response = await self.get_track_download_info_request(
             track_id=track_id,
@@ -73,8 +73,8 @@ class YMClient(AiohttpClient):
 
     @get("tracks/{track_id}/download-info")
     async def get_track_download_info_request(
-            self,
-            track_id: Union[int, str],
+        self,
+        track_id: Union[int, str],
     ) -> Response[List[DownloadInfo]]:
         ...
 
@@ -87,9 +87,9 @@ class YMClient(AiohttpClient):
         ...
 
     async def get_playlist(
-            self,
-            playlist_id: Union[int, str],
-            user_id: Optional[Union[int, str]] = None,
+        self,
+        playlist_id: Union[int, str],
+        user_id: Optional[Union[int, str]] = None,
     ) -> Playlist:
         user_id = user_id or self.user_id
         if user_id is None:
@@ -102,9 +102,9 @@ class YMClient(AiohttpClient):
 
     @get("users/{user_id}/playlists/{playlist_id}")
     async def get_playlist_request(
-            self,
-            user_id: Union[int, str],
-            playlist_id: Union[int, str],
+        self,
+        user_id: Union[int, str],
+        playlist_id: Union[int, str],
     ) -> Response[Playlist]:
         ...
 
@@ -114,8 +114,8 @@ class YMClient(AiohttpClient):
 
     @get("albums/{album_id}")
     async def get_album_request(
-            self,
-            album_id: Union[int, str],
+        self,
+        album_id: Union[int, str],
     ) -> Response[ShortAlbum]:
         ...
 
@@ -125,21 +125,21 @@ class YMClient(AiohttpClient):
 
     @get("albums/{album_id}/with-tracks")
     async def get_album_with_tracks_request(
-            self,
-            album_id: Union[int, str],
+        self,
+        album_id: Union[int, str],
     ) -> Response[Album]:
         ...
 
     async def get_albums(
-            self,
-            album_ids: List[Union[int, str]],
+        self,
+        album_ids: List[Union[int, str]],
     ) -> List[ShortAlbum]:
         response = await self.get_albums_request(album_ids=album_ids)
         return response.result
 
     @get("albums")
     async def get_albums_request(
-            self,
-            album_ids: List[Union[int, str]],
+        self,
+        album_ids: List[Union[int, str]],
     ) -> Response[List[ShortAlbum]]:
         ...

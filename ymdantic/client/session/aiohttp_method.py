@@ -11,6 +11,15 @@ from ymdantic.models.error import YandexMusicErrorModel
 
 class YMHttpMethod(AiohttpMethod):
     async def _on_error_default(self, response: ClientResponse) -> None:
+        """
+        Этот метод вызывается при получении ответа с кодом ошибки от 400 до 500.
+
+        Он пытается извлечь информацию об ошибке из ответа и вызывает исключение
+        YandexMusicError с этой информацией.
+
+        :param response: Объект ClientResponse, содержащий ответ от сервера.
+        :raises YandexMusicError: Если статус ответа от 400 до 500.
+        """
         response_json = await response.json()
         if 400 <= response.status <= 500:
             raise YandexMusicError(
@@ -20,6 +29,20 @@ class YMHttpMethod(AiohttpMethod):
             )
 
     async def _response_body(self, response: ClientResponse) -> Any:
+        """
+        Этот метод используется для обработки тела ответа.
+
+        Он пытается извлечь JSON из ответа и обрабатывает его в зависимости от
+        содержимого.
+        Если в ответе есть ошибка "not-found", вызывается исключение YandexMusicError.
+        Если результатов много, то возвращается список результатов без ошибок.
+
+        :param response: Объект ClientResponse, содержащий ответ от сервера.
+        :raises YandexMusicError: Если в ответе есть ошибка "not-found".
+        :raises ClientLibraryError: Если происходит ошибка при обработке ответа.
+        :raises MalformedResponse: Если ответ не может быть преобразован в JSON.
+        :return: Обработанный JSON ответа.
+        """
         try:
             response_json = await response.json()
             if response_json.get("result") is None:
