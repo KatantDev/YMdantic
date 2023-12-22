@@ -83,6 +83,17 @@ class BaseTrack(YMBaseModel, RemoveDeprecated):
     # Является ли трек лучшим (поле доступно при получении альбома с треками
     # `get_album_with_tracks`).
 
+    @property
+    def artists_names(self) -> Optional[str]:
+        """
+        Получает имена артистов трека.
+
+        :return: Имена артистов трека.
+        """
+        if not self.artists:
+            return None
+        return ", ".join(artist.name for artist in self.artists)
+
 
 class UnavailableTrack(BaseTrack):
     """

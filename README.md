@@ -34,8 +34,7 @@ async def get_chart(client: YMClient) -> None:
     print(chart_block.title, end="\n\n")
     print("Треки в чарте:")
     for playlist_track in chart_block.chart.tracks:
-        artists_name = ", ".join(artist.name for artist in playlist_track.track.artists)
-        print(f"{artists_name} - {playlist_track.track.title}")
+        print(f"{playlist_track.track.artists_names} - {playlist_track.track.title}")
 
 
 if __name__ == "__main__":

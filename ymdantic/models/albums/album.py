@@ -141,6 +141,17 @@ class BaseAlbum(YMBaseModel, RemoveDeprecated):
             return None
         return HttpUrl(f"https://{self.background_image_url.replace('%%', size)}")
 
+    @property
+    def artists_names(self) -> Optional[str]:
+        """
+        Получает имена артистов альбома.
+
+        :return: Имена артистов альбома.
+        """
+        if not self.artists:
+            return None
+        return ", ".join(artist.name for artist in self.artists)
+
 
 class ShortAlbum(BaseAlbum):
     """Pydantic модель, представляющая краткую информацию об альбоме."""
