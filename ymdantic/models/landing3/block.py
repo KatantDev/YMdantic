@@ -8,7 +8,7 @@ BlockType = Literal["chart"]
 BlockVar = TypeVar("BlockVar")
 
 
-class YMBaseBlock(YMBaseModel):
+class BaseBlock(YMBaseModel):
     """Pydantic модель, представляющая базовую информацию о любом блоке в лендинге."""
 
     id: str
@@ -21,7 +21,7 @@ class YMBaseBlock(YMBaseModel):
     # Заголовок блока.
 
 
-class ChartBlock(YMBaseBlock):
+class ChartBlock(BaseBlock):
     """Pydantic модель, представляющая информацию о блоке с чартами."""
 
     menu: Menu

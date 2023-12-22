@@ -22,3 +22,22 @@ pip install ymdantic
 ```bash
 poetry add ymdantic
 ```
+
+## Пример использования
+Получаем список чартов и выводим треки
+```python
+import asyncio
+from ymdantic import YMClient
+
+async def get_chart(client: YMClient) -> None:
+    chart_block = await client.get_chart()
+    print(chart_block.title, end="\n\n")
+    print("Треки в чарте:")
+    for playlist_track in chart_block.chart.tracks:
+        artists_name = ", ".join(artist.name for artist in playlist_track.track.artists)
+        print(f"{artists_name} - {playlist_track.track.title}")
+
+
+if __name__ == "__main__":
+    asyncio.run(get_chart(client=YMClient(token="y0_123")))
+```
