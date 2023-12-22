@@ -29,7 +29,7 @@ class ClientMixin:
         return obj
 
 
-class RemoveDeprecatedMixin:
+class DeprecatedMixin:
     """Миксин, удаляющий устаревшие поля из модели."""
 
     @model_validator(mode="before")

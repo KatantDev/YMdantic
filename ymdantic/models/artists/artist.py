@@ -2,11 +2,12 @@ from typing import List, Optional, Dict, Any, Literal
 
 from pydantic import model_validator, HttpUrl
 
-from ymdantic.models.base import YMBaseModel, RemoveDeprecated
+from ymdantic.mixins import DeprecatedMixin
+from ymdantic.models.base import YMBaseModel
 from ymdantic.models.cover import Cover
 
 
-class Artist(YMBaseModel, RemoveDeprecated):
+class Artist(YMBaseModel, DeprecatedMixin):
     """Pydantic модель, представляющая информацию об артисте."""
 
     id: int

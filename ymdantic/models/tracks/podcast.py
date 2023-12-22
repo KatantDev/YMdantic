@@ -1,14 +1,14 @@
 from datetime import date
 from typing import List, Optional, Literal
 
-from ymdantic.models.base import RemoveDeprecated
+from ymdantic.mixins import DeprecatedMixin
 from ymdantic.models.tracks.track import UnavailableTrack, Track
 from ymdantic.models.tracks.track_album import TrackAlbum
 
 PodcastEpisodeType = Literal["full", "bonus", "trailer"]
 
 
-class UnavailablePodcast(UnavailableTrack, RemoveDeprecated):
+class UnavailablePodcast(UnavailableTrack, DeprecatedMixin):
     """Pydantic модель, представляющая информацию о недоступном подкасте."""
 
     type: Literal["music", "comment"]  # type: ignore[assignment]

@@ -3,9 +3,10 @@ from typing import List, Optional, Any, Dict, Literal, TYPE_CHECKING
 
 from pydantic import model_validator, HttpUrl
 
+from ymdantic.mixins import DeprecatedMixin
 from ymdantic.models.action_button import ActionButton
 from ymdantic.models.albums.label import Label
-from ymdantic.models.base import YMBaseModel, RemoveDeprecated
+from ymdantic.models.base import YMBaseModel
 from ymdantic.models.artists import Artist
 from ymdantic.models.custom_wave import CustomWave
 from ymdantic.models.pager import Pager
@@ -29,7 +30,7 @@ AlbumType = Literal[
 SortOrder = Literal["asc", "desc"]
 
 
-class BaseAlbum(YMBaseModel, RemoveDeprecated):
+class BaseAlbum(YMBaseModel, DeprecatedMixin):
     """Pydantic модель, представляющая информацию, присущую всем альбомам."""
 
     id: int

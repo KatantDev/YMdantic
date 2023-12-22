@@ -2,8 +2,9 @@ from typing import List, Optional, Literal
 
 from pydantic import HttpUrl
 
+from ymdantic.mixins import DeprecatedMixin
 from ymdantic.models.artists import Artist
-from ymdantic.models.base import YMBaseModel, RemoveDeprecated
+from ymdantic.models.base import YMBaseModel
 from ymdantic.models.chart_position import ChartPosition
 from ymdantic.models.tracks.r128 import R128
 from ymdantic.models.tracks.fade import Fade
@@ -17,7 +18,7 @@ AvailableForOptions = List[Literal["bookmate"]]
 TrackSource = Literal["OWN", "OWN_REPLACED_TO_UGC"]
 
 
-class BaseTrack(YMBaseModel, RemoveDeprecated):
+class BaseTrack(YMBaseModel, DeprecatedMixin):
     """Pydantic модель, представляющая базовую информацию о любом треке."""
 
     type: Literal["music", "asmr", "audiobook", "noise", "fairy-tale"]
