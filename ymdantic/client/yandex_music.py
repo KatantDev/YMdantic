@@ -78,12 +78,15 @@ class YMClient(AiohttpClient):
     ) -> Response[List[DownloadInfo]]:
         ...
 
-    async def get_chart(self) -> ChartBlock:
-        response = await self.get_chart_request()
+    async def get_chart(self, limit: Optional[int] = None) -> ChartBlock:
+        response = await self.get_chart_request(limit=limit)
         return response.result
 
     @get("landing3/chart")
-    async def get_chart_request(self) -> Response[ChartBlock]:
+    async def get_chart_request(
+        self,
+        limit: Optional[int] = None,
+    ) -> Response[ChartBlock]:
         ...
 
     async def get_playlist(

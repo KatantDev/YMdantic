@@ -1,10 +1,11 @@
 from json import JSONDecodeError
 from logging import getLogger
-from typing import Any
+from typing import Any, Dict
 
 from aiohttp import ClientResponse, ClientError
 from dataclass_rest.exceptions import ClientLibraryError, MalformedResponse
 from dataclass_rest.http.aiohttp import AiohttpMethod
+from dataclass_rest.http_request import HttpRequest
 
 from ymdantic.exceptions import YandexMusicError
 from ymdantic.models.error import YandexMusicErrorModel
@@ -12,7 +13,29 @@ from ymdantic.models.error import YandexMusicErrorModel
 logger = getLogger(__name__)
 
 
+def exclude_none(params: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Удаление элементов из словаря в которых значение равно None.
+
+    :param params: Исходный словарь.
+    :return: Словарь без пустых значений.
+    """
+    return {k: v for k, v in params.items() if v is not None}
+
+
 class YMHttpMethod(AiohttpMethod):
+    async def _pre_process_request(self, request: HttpRequest) -> HttpRequest:
+        """
+        Этот метод используется для предварительной обработки запроса.
+
+        Достаем параметры запроса и очищаем поля в которых значения равны None.
+
+        :param request: Запрос для сервера.
+        :return: Обработанное тело запроса.
+        """
+        request.query_params = exclude_none(request.query_params)
+        return request
+
     async def _pre_process_response(self, response: Any) -> Any:
         """
         Этот метод используется для предварительной обработки ответа от сервера.
