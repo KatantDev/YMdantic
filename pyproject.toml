@@ -47,9 +47,6 @@ select = [
     "Q",
     "RET",
 ]
-ignore = [
-    "F401"
-]
 src = ["ymdantic"]
 exclude = [
     ".git",
