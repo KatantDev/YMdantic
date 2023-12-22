@@ -17,10 +17,10 @@ class AiohttpClient(BaseClient):
     method_class = YMHttpMethod
 
     def __init__(
-            self,
-            base_url: str,
-            headers: Optional[Dict[str, Any]] = None,
-            timeout: Optional[ClientTimeout] = None,
+        self,
+        base_url: str,
+        headers: Optional[Dict[str, Any]] = None,
+        timeout: Optional[ClientTimeout] = None,
     ):
         super().__init__()
         self.base_url = base_url
@@ -44,10 +44,19 @@ class AiohttpClient(BaseClient):
         try:
             yield self
         finally:
-            if auto_close:
+            if auto_close and self._session and not self._session.closed:
                 await self._session.close()
 
     async def get_session(self) -> ClientSession:
+        """
+        Этот метод используется для получения текущей сессии.
+
+        Если сессия None или закрыта, он создает новую ClientSession с указанным
+        коннектором и заголовками.
+
+        :return: Текущую сессию, если она существует и открыта, в противном случае
+            новую сессию.
+        """
         if self._session is None or self._session.closed:
             self._session = ClientSession(
                 connector=self._connector_type(**self._connector_init),
@@ -57,12 +66,25 @@ class AiohttpClient(BaseClient):
         return self._session
 
     async def close(self) -> None:
+        """Этот метод используется для закрытия текущей сессии, если она открыта."""
         if self._session and not self._session.closed:
             await self._session.close()
 
             await asyncio.sleep(0.25)
 
     async def do_request(self, request: HttpRequest) -> Any:
+        """
+        Этот метод используется для выполнения запроса.
+
+        Если запрос является JSON-запросом, данные запроса устанавливаются в json,
+        иначе в data.
+        Если в запросе есть файлы, они добавляются в FormData.
+        Затем выполняется запрос с использованием текущей сессии и возвращается ответ.
+
+        :param request: Объект HttpRequest, содержащий данные запроса.
+        :return: Ответ на запрос.
+        :raises ClientLibraryError: Если происходит ошибка при выполнении запроса.
+        """
         if request.is_json_request:
             json = request.data
             data = None
@@ -74,25 +96,33 @@ class AiohttpClient(BaseClient):
             for name, file in request.files.items():
                 data.add_field(
                     name,
-                    filename=file.filename, content_type=file.content_type,
+                    filename=file.filename,
+                    content_type=file.content_type,
                     value=file.contents,
                 )
         try:
             session = await self.get_session()
             async with session.request(
-                    url=urllib.parse.urljoin(self.base_url, request.url),
-                    method=request.method,
-                    json=json,
-                    data=data,
-                    params=request.query_params,
-                    timeout=self.timeout,
+                url=urllib.parse.urljoin(self.base_url, request.url),
+                method=request.method,
+                json=json,
+                data=data,
+                params=request.query_params,
+                timeout=self.timeout,
             ) as response:
                 await response.read()
                 return response
         except ClientError as e:
             raise ClientLibraryError from e
 
-    def __del__(self):
+    def __del__(self) -> None:
+        """
+        Этот метод вызывается при удалении объекта класса AiohttpClient.
+
+        Если сессия существует и открыта, и если у сессии есть коннектор и она
+        является владельцем коннектора, то коннектор сессии закрывается и
+        устанавливается в None.
+        """
         if self._session and not self._session.closed:
             if self._session.connector is not None and self._session.connector_owner:
                 self._session.connector.close()

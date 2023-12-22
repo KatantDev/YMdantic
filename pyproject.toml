@@ -10,10 +10,11 @@ python = "^3.10"
 aiohttp = "^3.9.1"
 pydantic = "^2.5.2"
 dataclass-rest = "^0.4"
-pre-commit = "^3.6.0"
+certifi = "^2023.11.17"
 
 [tool.poetry.dev-dependencies]
 ruff = "^0.1.9"
+pre-commit = "^3.6.0"
 
 
 [tool.poetry.group.dev.dependencies]
