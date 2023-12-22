@@ -29,7 +29,7 @@ AlbumType = Literal[
 SortOrder = Literal["asc", "desc"]
 
 
-class YMBaseAlbum(YMBaseModel, RemoveDeprecated):
+class BaseAlbum(YMBaseModel, RemoveDeprecated):
     """Pydantic модель, представляющая информацию, присущую всем альбомам."""
 
     id: int
@@ -64,7 +64,7 @@ class YMBaseAlbum(YMBaseModel, RemoveDeprecated):
     # Флаг, указывающий, доступен ли альбом частично.
     bests: List[int]
     # Список лучших треков альбома.
-    disclaimers: List[str]
+    disclaimers: List[Literal[""]]  # TODO: Проверить, что тут может быть.
     # Список отказов от ответственности альбома.
     short_description: Optional[str] = None
     # Краткое описание альбома.
@@ -110,8 +110,39 @@ class YMBaseAlbum(YMBaseModel, RemoveDeprecated):
         album["genres"] = [genre] if genre is not None else []
         return album
 
+    def get_og_image_url(self, size: str = "200x200") -> HttpUrl:
+        """
+        Возвращает URL OG-изображения альбома с заданным размером.
 
-class ShortAlbum(YMBaseAlbum):
+        :param size: Размер изображения.
+        :return: URL OG-изображения альбома с заданным размером.
+        """
+        return HttpUrl(f"https://{self.og_image.replace('%%', size)}")
+
+    def get_cover_image_url(self, size: str = "200x200") -> Optional[HttpUrl]:
+        """
+        Возвращает URL изображения обложки альбома с заданным размером.
+
+        :param size: Размер изображения.
+        :return: URL изображения обложки альбома с заданным размером.
+        """
+        if self.cover_uri is None:
+            return None
+        return HttpUrl(f"https://{self.cover_uri.replace('%%', size)}")
+
+    def get_background_image_url(self, size: str = "200x200") -> Optional[HttpUrl]:
+        """
+        Возвращает URL изображения фона альбома с заданным размером.
+
+        :param size: Размер изображения.
+        :return: URL изображения фона альбома с заданным размером.
+        """
+        if self.background_image_url is None:
+            return None
+        return HttpUrl(f"https://{self.background_image_url.replace('%%', size)}")
+
+
+class ShortAlbum(BaseAlbum):
     """Pydantic модель, представляющая краткую информацию об альбоме."""
 
     is_banner: Optional[bool] = None

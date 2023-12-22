@@ -6,5 +6,5 @@ class Tag(YMBaseModel):
 
     id: str
     # Уникальный идентификатор тега.
-    value: str  # TODO: Change to Literal
+    value: str  # TODO: Изменить на Literal, выяснить, какие значения могут быть.
     # Значение тега.

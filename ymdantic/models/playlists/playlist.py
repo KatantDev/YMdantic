@@ -22,8 +22,8 @@ class BasePlaylist(YMBaseModel):
     # Доступность плейлиста.
     uid: int
     # Уникальный идентификатор пользователя.
-    kind: int
-    # Вид плейлиста.
+    kind: int  # TODO: Проверить, что тут может быть.
+    # Вид плейлиста. Известно, что при значении 3 - понравившиеся треки.
     title: str
     # Название плейлиста.
     revision: int
@@ -54,6 +54,23 @@ class BasePlaylist(YMBaseModel):
     # Теги плейлиста.
     playlist_uuid: Optional[str] = None
     # UUID плейлиста.
+
+    def get_og_image_url(self, size: str = "200x200") -> HttpUrl:
+        """
+        Возвращает URL OG-изображения плейлиста.
+
+        :return: URL OG-изображения плейлиста.
+        """
+        return HttpUrl(f"https://{self.og_image.replace('%%', size)}")
+
+    def get_cover_image_url(self, size: str = "200x200") -> HttpUrl:
+        """
+        Возвращает URL изображения обложки плейлиста с заданным размером.
+
+        :param size: Размер изображения.
+        :return: URL изображения обложки плейлиста с заданным размером.
+        """
+        return self.cover.get_image_url(size)
 
 
 class ShortPlaylist(BasePlaylist):
@@ -86,7 +103,6 @@ class ShortPlaylist(BasePlaylist):
     background_color: Optional[str] = None
     # Цвет фона плейлиста.
     child_content: Optional[bool] = None
-
     # Содержит ли плейлист детский контент.
 
     @field_validator("background_color", mode="before")
@@ -95,6 +111,17 @@ class ShortPlaylist(BasePlaylist):
         if not v:
             return None
         return v
+
+    def get_background_image_url(self, size: str = "200x200") -> Optional[HttpUrl]:
+        """
+        Возвращает URL изображения фона плейлиста с заданным размером.
+
+        :param size: Размер изображения.
+        :return: URL изображения фона плейлиста с заданным размером.
+        """
+        if self.background_image_url is None:
+            return None
+        return HttpUrl(f"https://{self.background_image_url.replace('%%', size)}")
 
 
 class Playlist(ShortPlaylist):

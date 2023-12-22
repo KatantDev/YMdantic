@@ -1,5 +1,7 @@
 from typing import Optional, Literal
 
+from pydantic import HttpUrl
+
 from ymdantic.models.base import YMBaseModel
 
 
@@ -18,3 +20,12 @@ class Cover(YMBaseModel):
     # Название правообладателя обложки. Используется очень редко.
     copyright_cline: Optional[str] = None
     # Копирайт обложки. Используется очень редко.
+
+    def get_image_url(self, size: str = "200x200") -> HttpUrl:
+        """
+        Возвращает URL изображения обложки с заданным размером.
+
+        :param size: Размер изображения.
+        :return: URL изображения обложки с заданным размером.
+        """
+        return HttpUrl(f"https://{self.uri.replace('%%', size)}")

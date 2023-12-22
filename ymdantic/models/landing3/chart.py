@@ -30,3 +30,12 @@ class Chart(BasePlaylist):
     # Список треков в чарте.
     similar_playlists: List["ShortPlaylist"]
     # Список похожих плейлистов.
+
+    def get_background_image_url(self, size: str = "200x200") -> HttpUrl:
+        """
+        Возвращает URL изображения фона чарта с заданным размером.
+
+        :param size: Размер изображения.
+        :return: URL изображения фона чарта с заданным размером.
+        """
+        return HttpUrl(f"https://{self.background_image_url.replace('%%', size)}")

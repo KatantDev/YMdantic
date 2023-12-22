@@ -1,4 +1,4 @@
-from .album import YMBaseAlbum, ShortAlbum, Album
+from .album import BaseAlbum, ShortAlbum, Album
 from .label import Label
 
-__all__ = ("YMBaseAlbum", "ShortAlbum", "Album", "Label")
+__all__ = ("BaseAlbum", "ShortAlbum", "Album", "Label")

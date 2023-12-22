@@ -1,6 +1,6 @@
-from typing import List, Optional, Dict, Any
+from typing import List, Optional, Dict, Any, Literal
 
-from pydantic import model_validator
+from pydantic import model_validator, HttpUrl
 
 from ymdantic.models.base import YMBaseModel, RemoveDeprecated
 from ymdantic.models.cover import Cover
@@ -19,10 +19,9 @@ class Artist(YMBaseModel, RemoveDeprecated):
     # Флаг, указывающий, является ли артист композитором.
     genres: List[str]
     # Жанры треков артиста.
-    disclaimers: List[str]
+    disclaimers: List[Literal[""]]  # TODO: Проверить, что тут может быть.
     # Список отказов от ответственности артиста.
     cover: Optional[Cover] = None
-
     # Обложка артиста.
 
     @model_validator(mode="before")
@@ -43,3 +42,14 @@ class Artist(YMBaseModel, RemoveDeprecated):
         artist.pop("genre", None)
         artist["genres"] = [genre] if genre else []
         return artist
+
+    def get_cover_image_url(self, size: str = "200x200") -> Optional[HttpUrl]:
+        """
+        Возвращает URL изображения обложки артиста с заданным размером.
+
+        :param size: Размер изображения.
+        :return: URL изображения обложки артиста с заданным размером.
+        """
+        if self.cover is None:
+            return None
+        return self.cover.get_image_url(size)

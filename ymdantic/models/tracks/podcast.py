@@ -1,3 +1,4 @@
+from datetime import date
 from typing import List, Optional, Literal
 
 from ymdantic.models.base import RemoveDeprecated
@@ -17,7 +18,7 @@ class UnavailablePodcast(UnavailableTrack, RemoveDeprecated):
     # Список альбомов, в которых присутствует подкаст.
     podcast_episode_type: Optional[PodcastEpisodeType] = None
     # Тип эпизода подкаста (если есть).
-    pub_date: Optional[str] = None
+    pub_date: Optional[date] = None
     # Дата публикации подкаста (если есть).
     short_description: Optional[str] = None
     # Краткое описание подкаста (если есть).
@@ -32,7 +33,7 @@ class Podcast(Track):
     # Список альбомов, в которых присутствует подкаст.
     podcast_episode_type: Optional[PodcastEpisodeType] = None
     # Тип эпизода подкаста (если есть).
-    pub_date: Optional[str] = None
+    pub_date: Optional[date] = None
     # Дата публикации подкаста (если есть).
     short_description: Optional[str] = None
     # Краткое описание подкаста (если есть).

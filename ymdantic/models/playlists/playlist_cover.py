@@ -1,5 +1,7 @@
 from typing import Literal, Union, List
 
+from pydantic import HttpUrl
+
 from ymdantic.models.base import YMBaseModel
 
 
@@ -12,6 +14,15 @@ class PlaylistCoverMosaic(YMBaseModel):
     # Список URI элементов мозаики.
     custom: bool
     # Флаг, указывающий, является ли обложка пользовательской.
+
+    def get_image_url(self, size: str = "200x200") -> HttpUrl:
+        """
+        Возвращает URL изображения обложки плейлиста с заданным размером.
+
+        :param size: Размер изображения.
+        :return: URL изображения обложки плейлиста с заданным размером.
+        """
+        return HttpUrl(f"https://{self.items_uri[0].replace('%%', size)}")
 
 
 class PlaylistCoverPic(YMBaseModel):
@@ -27,6 +38,15 @@ class PlaylistCoverPic(YMBaseModel):
     # URI изображения обложки.
     custom: bool
     # Флаг, указывающий, является ли обложка пользовательской.
+
+    def get_image_url(self, size: str = "200x200") -> HttpUrl:
+        """
+        Возвращает URL изображения обложки плейлиста с заданным размером.
+
+        :param size: Размер изображения.
+        :return: URL изображения обложки плейлиста с заданным размером.
+        """
+        return HttpUrl(f"https://{self.uri.replace('%%', size)}")
 
 
 PlaylistCover = Union[PlaylistCoverMosaic, PlaylistCoverPic]

@@ -2,7 +2,14 @@ from .landing3 import ChartBlock
 from .playlists import Playlist
 from .response import Response
 from .albums import Album, ShortAlbum
-from .tracks import TrackType, DownloadInfo
+from .tracks import (
+    TrackType,
+    DownloadInfo,
+    Track,
+    UnavailableTrack,
+    Podcast,
+    UnavailablePodcast,
+)
 from .artists import Artist
 
 # Ребилд моделей с учётом новых изменений. (TrackType)
@@ -18,4 +25,8 @@ __all__ = (
     "DownloadInfo",
     "ChartBlock",
     "Playlist",
+    "Track",
+    "UnavailableTrack",
+    "Podcast",
+    "UnavailablePodcast",
 )

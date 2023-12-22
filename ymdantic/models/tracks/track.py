@@ -35,7 +35,7 @@ class BaseTrack(YMBaseModel, RemoveDeprecated):
     available_full_without_permission: bool
     # Полная доступность трека без разрешения.
     disclaimers: List[Literal["modal"]]
-    # Отказы от ответственности.
+    # Список отказов от ответственности трека.
     artists: List[Artist]
     # Список артистов трека. Может быть пустым.
     albums: List[TrackAlbum]
@@ -146,7 +146,7 @@ class Track(BaseTrack):
     chart: Optional[ChartPosition] = None
     # Информация о чарте, если трек входит в чарт.
 
-    def get_cover_url(self, size: str = "200x200") -> str:
+    def get_cover_url(self, size: str = "200x200") -> HttpUrl:
         """
         Получает URL изображения обложки.
 
@@ -154,4 +154,4 @@ class Track(BaseTrack):
             По умолчанию 200x200.
         :return: URL изображения обложки.
         """
-        return f"https://{self.cover_uri.replace('%%', size)}"
+        return HttpUrl(f"https://{self.cover_uri.replace('%%', size)}")
