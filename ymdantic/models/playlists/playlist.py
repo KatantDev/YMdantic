@@ -1,7 +1,7 @@
 from datetime import datetime
-from typing import Literal, List, Optional, Annotated
+from typing import Literal, List, Optional
 
-from pydantic import HttpUrl, BeforeValidator
+from pydantic import HttpUrl, field_validator
 
 from ymdantic.models.action_button import ActionButton
 from ymdantic.models.base import YMBaseModel
@@ -11,11 +11,6 @@ from ymdantic.models.playlists.owner import PlaylistOwner
 from ymdantic.models.playlists.playlist_cover import PlaylistCover
 from ymdantic.models.playlists.playlist_track import PlaylistTrack
 from ymdantic.models.playlists.tag import Tag
-
-BackgroundColor = Annotated[
-    Optional[str],
-    BeforeValidator(lambda color: color if color else None),
-]
 
 
 class BasePlaylist(YMBaseModel):
@@ -88,10 +83,18 @@ class ShortPlaylist(BasePlaylist):
     # Цвет текста плейлиста.
     action_button: Optional[ActionButton] = None
     # Кнопка действия плейлиста.
-    background_color: BackgroundColor = None
+    background_color: Optional[str] = None
     # Цвет фона плейлиста.
     child_content: Optional[bool] = None
+
     # Содержит ли плейлист детский контент.
+
+    @field_validator("background_color", mode="before")
+    @classmethod
+    def validate_background_color(cls, v: Optional[str] = None) -> Optional[str]:
+        if not v:
+            return None
+        return v
 
 
 class Playlist(ShortPlaylist):
