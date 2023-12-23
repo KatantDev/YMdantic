@@ -1,4 +1,5 @@
-from .landing3 import ChartBlock
+from .landing3 import ChartBlock, NewReleasesBlock
+from .landing import NewReleasesResponse, NewReleases
 from .playlists import Playlist
 from .response import Response
 from .albums import Album, ShortAlbum
@@ -24,9 +25,12 @@ __all__ = (
     "TrackType",
     "DownloadInfo",
     "ChartBlock",
+    "NewReleasesBlock",
     "Playlist",
     "Track",
     "UnavailableTrack",
     "Podcast",
     "UnavailablePodcast",
+    "NewReleasesResponse",
+    "NewReleases",
 )

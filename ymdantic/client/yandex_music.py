@@ -15,6 +15,9 @@ from ymdantic.models import (
     Playlist,
     TrackType,
     DownloadInfo,
+    NewReleasesResponse,
+    NewReleases,
+    NewReleasesBlock,
 )
 
 
@@ -30,7 +33,7 @@ class YMClient(AiohttpClient):
             base_url=base_url,
             headers={
                 "Authorization": f"OAuth {token}",
-                "X-Yandex-Music-Client": "YandexMusic/648",
+                "X-Yandex-Music-Client": "YandexMusic/649",
             },
         )
 
@@ -89,6 +92,14 @@ class YMClient(AiohttpClient):
     ) -> Response[ChartBlock]:
         ...
 
+    async def get_new_releases_old(self) -> NewReleasesBlock:
+        response = await self.get_new_releases_old_request()
+        return response.result
+
+    @get("landing3/new-releases")
+    async def get_new_releases_old_request(self) -> Response[NewReleasesBlock]:
+        ...
+
     async def get_playlist(
         self,
         playlist_id: Union[int, str],
@@ -145,4 +156,20 @@ class YMClient(AiohttpClient):
         self,
         album_ids: List[Union[int, str]],
     ) -> Response[List[ShortAlbum]]:
+        ...
+
+    async def get_editorial_new_releases(self) -> List[NewReleases]:
+        response = await self.get_editorial_new_releases_request()
+        return response.new_releases
+
+    @get("landing/block/editorial/new-releases/ALL_albums_of_the_month")
+    async def get_editorial_new_releases_request(self) -> NewReleasesResponse:
+        ...
+
+    async def get_recommended_new_releases(self) -> List[NewReleases]:
+        response = await self.get_recommended_new_releases_request()
+        return response.new_releases
+
+    @get("landing/block/new-releases")
+    async def get_recommended_new_releases_request(self) -> NewReleasesResponse:
         ...
