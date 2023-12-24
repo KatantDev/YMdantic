@@ -1,5 +1,5 @@
 from .landing3 import ChartBlock, NewReleasesBlock
-from .landing import NewReleasesResponse, NewReleases
+from .landing import NewReleasesResponse, NewRelease
 from .playlists import Playlist
 from .response import Response
 from .albums import Album, ShortAlbum
@@ -35,6 +35,6 @@ __all__ = (
     "Podcast",
     "UnavailablePodcast",
     "NewReleasesResponse",
-    "NewReleases",
+    "NewRelease",
     "S3FileUrl",
 )

@@ -17,7 +17,7 @@ from ymdantic.models import (
     TrackType,
     DownloadInfo,
     NewReleasesResponse,
-    NewReleases,
+    NewRelease,
     NewReleasesBlock,
     S3FileUrl,
     DownloadInfoDirect,
@@ -187,7 +187,7 @@ class YMClient(AiohttpClient):
     ) -> Response[List[ShortAlbum]]:
         ...
 
-    async def get_editorial_new_releases(self) -> List[NewReleases]:
+    async def get_editorial_new_releases(self) -> List[NewRelease]:
         response = await self.get_editorial_new_releases_request()
         return response.new_releases
 
@@ -195,7 +195,7 @@ class YMClient(AiohttpClient):
     async def get_editorial_new_releases_request(self) -> NewReleasesResponse:
         ...
 
-    async def get_recommended_new_releases(self) -> List[NewReleases]:
+    async def get_recommended_new_releases(self) -> List[NewRelease]:
         response = await self.get_recommended_new_releases_request()
         return response.new_releases
 

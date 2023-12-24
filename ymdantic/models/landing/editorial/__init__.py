@@ -1,3 +1,3 @@
-from .new_releases import NewReleasesResponse, NewReleases
+from .new_releases import NewReleasesResponse, NewRelease
 
-__all__ = ("NewReleasesResponse", "NewReleases")
+__all__ = ("NewReleasesResponse", "NewRelease")
