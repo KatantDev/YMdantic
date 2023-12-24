@@ -71,17 +71,13 @@ class BaseTrack(YMBaseModel, DeprecatedMixin):
     # Предупреждение о содержании трека (если есть).
     is_suitable_for_children: Optional[bool] = None
     # Подходит ли трек для детей (если есть).
-    background_video_uri: Optional[str] = None
+    background_video_uri: Optional[HttpUrl] = None
     # URI фонового видео трека (если есть). Фоновое видео - это видео,
-    # которое отображается вместо обложки трека.
-    background_video_url: Optional[HttpUrl] = None
-    # URL фонового видео трека (если есть). Фоновое видео - это видео,
     # которое отображается вместо обложки трека.
     player_id: Optional[str] = None
     # Идентификатор плеера трека (если есть). Плеер требуется для
     # отображения фонового видео.
     best: Optional[bool] = None
-
     # Является ли трек лучшим (поле доступно при получении альбома с треками
     # `get_album_with_tracks`).
 
@@ -95,6 +91,30 @@ class BaseTrack(YMBaseModel, DeprecatedMixin):
         if not self.artists:
             return None
         return ", ".join(artist.name for artist in self.artists)
+
+    def get_cover_image_url(self, size: str = "200x200") -> Optional[HttpUrl]:
+        """
+        Получает URL изображения обложки.
+
+        :param size: Размер изображения обложки в пикселях.
+            По умолчанию 200x200.
+        :return: URL изображения обложки.
+        """
+        if self.cover_uri is None:
+            return None
+        return HttpUrl(f"https://{self.cover_uri.replace('%%', size)}")
+
+    def get_og_image_url(self, size: str = "200x200") -> Optional[HttpUrl]:
+        """
+        Получает URL изображения обложки.
+
+        :param size: Размер изображения обложки в пикселях.
+            По умолчанию 200x200.
+        :return: URL изображения обложки.
+        """
+        if self.og_image is None:
+            return None
+        return HttpUrl(f"https://{self.og_image.replace('%%', size)}")
 
 
 class UnavailableTrack(BaseTrack):
@@ -157,18 +177,7 @@ class Track(BaseTrack):
     available_for_options: AvailableForOptions
     # Доступные опции для трека.
     chart: Optional[ChartPosition] = None
-
     # Информация о чарте, если трек входит в чарт.
-
-    def get_cover_url(self, size: str = "200x200") -> HttpUrl:
-        """
-        Получает URL изображения обложки.
-
-        :param size: Размер изображения обложки в пикселях.
-            По умолчанию 200x200.
-        :return: URL изображения обложки.
-        """
-        return HttpUrl(f"https://{self.cover_uri.replace('%%', size)}")
 
     async def get_download_info(self) -> List[DownloadInfo]:
         """

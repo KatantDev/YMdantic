@@ -57,7 +57,7 @@ class BaseAlbum(YMBaseModel, DeprecatedMixin):
     # Флаг, указывающий, доступен ли альбом.
     available_for_premium_users: bool
     # Флаг, указывающий, доступен ли альбом для премиум-пользователей.
-    available_for_options: AvailableForOptions
+    available_for_options: Optional[AvailableForOptions] = None
     # Список опций, для которых доступен альбом.
     available_for_mobile: bool
     # Флаг, указывающий, доступен ли альбом для мобильных устройств.
