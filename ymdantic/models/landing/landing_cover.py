@@ -16,15 +16,13 @@ class LandingPlaylistCover(YMBaseModel):
     derived_colors: Optional[DerivedColors] = None
     # Дополнительные цвета обложки плейлиста.
 
-    def get_image_url(self, size: str = "200x200") -> Optional[HttpUrl]:
+    def get_image_url(self, size: str = "200x200") -> HttpUrl:
         """
         Возвращает ссылку на изображение обложки.
 
         :param size: Размер изображения.
         :return: Ссылка на изображение обложки.
         """
-        if self.uri is None:
-            return None
         return HttpUrl(f"https://{self.uri.replace('%%', size)}")
 
 
