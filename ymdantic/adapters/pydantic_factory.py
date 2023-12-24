@@ -7,7 +7,7 @@ from ymdantic.models.base import YMBaseModel
 class PydanticFactory:
     @staticmethod
     def load(data: Dict[str, Any], type_: Any) -> Any:
-        client = data.get("__client")
+        client = data.pop("__client")
         model: YMBaseModel = TypeAdapter(type_).validate_python(
             data,
             context={"client": client},

@@ -12,7 +12,7 @@ from ymdantic.models.tracks.derived_colors import DerivedColors
 from ymdantic.models.tracks.track_album import TrackAlbum
 from ymdantic.models.tracks.lyrics_info import LyricsInfo
 from ymdantic.models.tracks.major import Major
-
+from ymdantic.models.tracks.download_info import DownloadInfo, DownloadInfoDirect
 
 AvailableForOptions = List[Literal["bookmate"]]
 TrackSource = Literal["OWN", "OWN_REPLACED_TO_UGC"]
@@ -81,6 +81,7 @@ class BaseTrack(YMBaseModel, DeprecatedMixin):
     # Идентификатор плеера трека (если есть). Плеер требуется для
     # отображения фонового видео.
     best: Optional[bool] = None
+
     # Является ли трек лучшим (поле доступно при получении альбома с треками
     # `get_album_with_tracks`).
 
@@ -156,6 +157,7 @@ class Track(BaseTrack):
     available_for_options: AvailableForOptions
     # Доступные опции для трека.
     chart: Optional[ChartPosition] = None
+
     # Информация о чарте, если трек входит в чарт.
 
     def get_cover_url(self, size: str = "200x200") -> HttpUrl:
@@ -167,3 +169,19 @@ class Track(BaseTrack):
         :return: URL изображения обложки.
         """
         return HttpUrl(f"https://{self.cover_uri.replace('%%', size)}")
+
+    async def get_download_info(self) -> List[DownloadInfo]:
+        """
+        Получает информацию для скачивания трека.
+
+        :return: Информация для скачивания трека.
+        """
+        return await self._client.get_track_download_info(track_id=self.id)
+
+    async def get_download_info_direct(self) -> List[DownloadInfoDirect]:
+        """
+        Получает информацию для скачивания трека + прямую ссылку.
+
+        :return: Информация для скачивания трека + прямая ссылка.
+        """
+        return await self._client.get_track_download_info_direct(track_id=self.id)

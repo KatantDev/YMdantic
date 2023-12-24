@@ -1,7 +1,7 @@
 from typing import Union
 
 from .derived_colors import DerivedColors
-from .download_info import DownloadInfo
+from .download_info import DownloadInfo, DownloadInfoDirect
 from .fade import Fade
 from .lyrics_info import LyricsInfo
 from .major import Major
@@ -19,6 +19,7 @@ __all__ = (
     "Podcast",
     "UnavailablePodcast",
     "DownloadInfo",
+    "DownloadInfoDirect",
     "TrackAlbum",
     "DerivedColors",
     "R128",
