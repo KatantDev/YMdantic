@@ -1,11 +1,9 @@
 import asyncio
-import ssl
 import urllib.parse
 from contextlib import asynccontextmanager
-from typing import Optional, Any, Type, Dict, AsyncIterator
+from typing import Optional, Any, Dict, AsyncIterator
 
-import certifi
-from aiohttp import ClientSession, FormData, ClientError, ClientTimeout, TCPConnector
+from aiohttp import ClientSession, FormData, ClientError, ClientTimeout
 from dataclass_rest.base_client import BaseClient
 from dataclass_rest.exceptions import ClientLibraryError
 from dataclass_rest.http_request import HttpRequest
@@ -25,13 +23,9 @@ class AiohttpClient(BaseClient):
         super().__init__()
         self.base_url = base_url
         self.headers = headers or {}
-        self.timeout: ClientTimeout = timeout or ClientTimeout(total=0)
 
+        self.timeout: ClientTimeout = timeout or ClientTimeout(total=0)
         self._session: Optional[ClientSession] = None
-        self._connector_type: Type[TCPConnector] = TCPConnector
-        self._connector_init: Dict[str, Any] = {
-            "ssl": ssl.create_default_context(cafile=certifi.where()),
-        }
 
     @asynccontextmanager
     async def context(self, auto_close: bool = True) -> AsyncIterator["AiohttpClient"]:
@@ -58,10 +52,7 @@ class AiohttpClient(BaseClient):
             новую сессию.
         """
         if self._session is None or self._session.closed:
-            self._session = ClientSession(
-                connector=self._connector_type(**self._connector_init),
-                headers=self.headers,
-            )
+            self._session = ClientSession(headers=self.headers)
 
         return self._session
 
