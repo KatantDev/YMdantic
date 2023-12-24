@@ -6,12 +6,14 @@ from .albums import Album, ShortAlbum
 from .tracks import (
     TrackType,
     DownloadInfo,
+    DownloadInfoDirect,
     Track,
     UnavailableTrack,
     Podcast,
     UnavailablePodcast,
 )
 from .artists import Artist
+from .s3 import S3FileUrl
 
 # Ребилд моделей с учётом новых изменений. (TrackType)
 ShortAlbum.model_rebuild()
@@ -24,6 +26,7 @@ __all__ = (
     "Artist",
     "TrackType",
     "DownloadInfo",
+    "DownloadInfoDirect",
     "ChartBlock",
     "NewReleasesBlock",
     "Playlist",
@@ -33,4 +36,5 @@ __all__ = (
     "UnavailablePodcast",
     "NewReleasesResponse",
     "NewReleases",
+    "S3FileUrl",
 )

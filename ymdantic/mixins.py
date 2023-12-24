@@ -9,7 +9,7 @@ if TYPE_CHECKING:
 class ClientMixin:
     """Миксин, добавляющий в Pydantic модель клиент для отправки запросов."""
 
-    __client: "YMClient"
+    _client: "YMClient"
 
     @model_validator(mode="before")
     def inject_ym_client(
@@ -25,7 +25,7 @@ class ClientMixin:
         :return: Словарь с данными модели.
         """
         if info.context is not None:
-            cls.__client = info.context.get("client")
+            cls._client = info.context.get("client")
         return obj
 
 

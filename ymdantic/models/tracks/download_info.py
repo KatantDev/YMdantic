@@ -2,6 +2,7 @@ from typing import Literal
 
 from pydantic import HttpUrl
 
+from ymdantic.models.s3 import S3FileUrl
 from ymdantic.models.base import YMBaseModel
 
 CodecType = Literal["mp3", "aac"]
@@ -22,3 +23,19 @@ class DownloadInfo(YMBaseModel):
     # Является ли ссылка на S3-хранилище прямой ссылкой на скачивание трека.
     bitrate_in_kbps: int
     # Битрейт трека в кбит/с.
+
+
+class DownloadInfoDirect(DownloadInfo):
+    direct_url_info: S3FileUrl
+
+    @property
+    def direct_url(self) -> HttpUrl:
+        """
+        Генерирует прямой URL для скачивания трека.
+
+        Этот метод возвращает URL, сформированный на основе информации о прямом URL,
+        хранящейся в атрибуте 'direct_url_info' экземпляра.
+
+        :return: Прямой URL для скачивания трека.
+        """
+        return self.direct_url_info.url
