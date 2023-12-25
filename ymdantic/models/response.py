@@ -1,11 +1,8 @@
-from typing import TypeVar, Generic, TYPE_CHECKING
+from typing import TypeVar, Generic
 
 from pydantic import BaseModel, Field
 
 from ymdantic.mixins import ClientMixin
-
-if TYPE_CHECKING:
-    pass
 
 
 ResponseVar = TypeVar("ResponseVar")

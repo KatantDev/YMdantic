@@ -5,6 +5,7 @@ from dataclass_rest import get
 from dataclass_rest.client_protocol import FactoryProtocol
 from pydantic import HttpUrl
 
+from ymdantic import enums
 from ymdantic.adapters.pydantic_factory import PydanticFactory
 from ymdantic.client.session import AiohttpClient
 from ymdantic.exceptions import UndefinedUser
@@ -21,6 +22,18 @@ from ymdantic.models import (
     NewReleasesBlock,
     S3FileUrl,
     DownloadInfoDirect,
+    SkeletonResponse,
+    EditorialResponse,
+    LandingArtist,
+    LandingArtistItem,
+    LandingAlbumItemData,
+    LandingAlbumItem,
+    LandingPlaylistItem,
+    LandingPlaylistItemData,
+    LandingPromotion,
+    LandingPromotionResponse,
+    LandingOpenPlaylist,
+    LandingSpecial,
 )
 
 
@@ -187,12 +200,18 @@ class YMClient(AiohttpClient):
     ) -> Response[List[ShortAlbum]]:
         ...
 
-    async def get_editorial_new_releases(self) -> List[NewRelease]:
-        response = await self.get_editorial_new_releases_request()
+    async def get_editorial_new_releases(
+        self,
+        block_type: enums.EditorialNewReleasesEnum,
+    ) -> List[NewRelease]:
+        response = await self.get_editorial_new_releases_request(block_type=block_type)
         return response.new_releases
 
-    @get("landing/block/editorial/new-releases/ALL_albums_of_the_month")
-    async def get_editorial_new_releases_request(self) -> NewReleasesResponse:
+    @get("landing/block/editorial/new-releases/{block_type}")
+    async def get_editorial_new_releases_request(
+        self,
+        block_type: enums.EditorialNewReleasesEnum,
+    ) -> NewReleasesResponse:
         ...
 
     async def get_recommended_new_releases(self) -> List[NewRelease]:
@@ -201,4 +220,72 @@ class YMClient(AiohttpClient):
 
     @get("landing/block/new-releases")
     async def get_recommended_new_releases_request(self) -> NewReleasesResponse:
+        ...
+
+    # Не нужен отдельный метод, так как возвращается прямой результат.
+    @get("landing/skeleton/main")
+    async def get_skeleton_main(self) -> SkeletonResponse:
+        ...
+
+    async def get_editorial_artists(
+        self,
+        block_type: enums.EditorialArtistsEnum,
+    ) -> List[LandingArtist]:
+        response = await self.get_editorial_artists_request(
+            block_type=block_type,
+        )
+        return [item.data.artist for item in response.items]
+
+    @get("landing/block/editorial/artists/{block_type}")
+    async def get_editorial_artists_request(
+        self,
+        block_type: enums.EditorialArtistsEnum,
+    ) -> EditorialResponse[LandingArtistItem]:
+        ...
+
+    async def get_editorial_compilation(
+        self,
+        block_type: enums.EditorialCompilationEnum,
+    ) -> Union[List[LandingAlbumItemData], List[LandingPlaylistItemData]]:
+        response = await self.get_editorial_compilation_request(
+            block_type=block_type,
+        )
+        return [item.data for item in response.items]
+
+    @get("landing/block/editorial/compilation/{block_type}")
+    async def get_editorial_compilation_request(
+        self,
+        block_type: enums.EditorialCompilationEnum,
+    ) -> EditorialResponse[Union[LandingAlbumItem, LandingPlaylistItem]]:
+        ...
+
+    async def get_editorial_promotions(
+        self,
+        block_type: enums.EditorialPromotionEnum,
+    ) -> List[LandingPromotion]:
+        response = await self.get_editorial_promotions_request(block_type=block_type)
+        return response.promotions
+
+    @get("landing/block/editorial-promotion/{block_type}")
+    async def get_editorial_promotions_request(
+        self,
+        block_type: enums.EditorialPromotionEnum,
+    ) -> LandingPromotionResponse:
+        ...
+
+    # Не нужен отдельный метод, так как возвращается прямой результат.
+    # Может быть smart-open-playlist или open-playlist.
+    @get("landing/block/{block_type}")
+    async def get_open_playlist(
+        self,
+        block_type: enums.OpenPlaylistEnum,
+    ) -> LandingOpenPlaylist:
+        ...
+
+    # Не нужен отдельный метод, так как возвращается прямой результат.
+    @get("landing/block/special/{block_type}")
+    async def get_special_blocks(
+        self,
+        block_type: enums.SpecialEnum,
+    ) -> LandingSpecial:
         ...

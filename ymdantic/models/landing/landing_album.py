@@ -1,13 +1,14 @@
-from typing import Literal, Optional
+from typing import Literal, Optional, List
 
 from pydantic import HttpUrl
 
+from ymdantic.models.landing.landing_artist import LandingArtist
 from ymdantic.models.base import YMBaseModel
 from ymdantic.models.landing.landing_cover import LandingCover
 
 
 class LandingAlbum(YMBaseModel):
-    """Pydantic модель, представляющая информацию о LandingAlbum."""
+    """Pydantic модель, представляющая информацию об альбоме не главной."""
 
     id: int
     # Уникальный идентификатор альбома.
@@ -15,9 +16,9 @@ class LandingAlbum(YMBaseModel):
     # Название альбома.
     cover: LandingCover
     # Обложка альбома. Содержит информацию о цветах для обложки и URI обложки.
-    album_type: Optional[Literal["single"]] = None
+    album_type: Optional[Literal["single", "compilation"]] = None
     # Тип альбома.
-    content_warning: Optional[Literal["explicit"]] = None
+    content_warning: Optional[Literal["explicit", "clean"]] = None
     # Предупреждение о содержании.
 
     def get_cover_image_url(self, size: str = "200x200") -> HttpUrl:
@@ -28,3 +29,21 @@ class LandingAlbum(YMBaseModel):
         :return: Ссылка на изображение обложки.
         """
         return self.cover.get_image_url(size)
+
+
+class LandingAlbumItemData(YMBaseModel):
+    """Pydantic модель, представляющая информацию об альбоме на главной."""
+
+    album: LandingAlbum
+    artists: List[LandingArtist]
+
+
+class LandingAlbumItem(YMBaseModel):
+    """
+    Pydantic модель, представляющая информацию об элементе на главной.
+
+    В данном случае, об альбоме.
+    """
+
+    type: Literal["album_item"]
+    data: LandingAlbumItemData

@@ -1,3 +1,5 @@
+from typing import Literal
+
 from pydantic import HttpUrl
 
 from ymdantic.models.base import YMBaseModel
@@ -5,7 +7,7 @@ from ymdantic.models.landing.landing_cover import LandingCover
 
 
 class LandingArtist(YMBaseModel):
-    """Pydantic модель, представляющая информацию о LandingArtist."""
+    """Pydantic модель, представляющая информацию об артисте на главной."""
 
     id: int
     # Уникальный идентификатор артиста.
@@ -22,3 +24,23 @@ class LandingArtist(YMBaseModel):
         :return: Ссылка на изображение обложки.
         """
         return self.cover.get_image_url(size)
+
+
+class LandingArtistItemData(YMBaseModel):
+    """Pydantic модель, представляющая информацию об артисте на главной."""
+
+    artist: LandingArtist
+    # Информация об артисте.
+
+
+class LandingArtistItem(YMBaseModel):
+    """
+    Pydantic модель, представляющая информацию об элементе на главной.
+
+    В данном случае, об артисте.
+    """
+
+    type: Literal["artist_item"]
+    # Тип элемента.
+    data: LandingArtistItemData
+    # Информация о блоке артиста.
