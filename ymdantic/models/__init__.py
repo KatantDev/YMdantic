@@ -14,6 +14,7 @@ from .tracks import (
 )
 from .artists import Artist
 from .s3 import S3FileUrl
+from .account import AccountSettings, SetAccountSettingsBody
 
 # Ребилд моделей с учётом новых изменений. (TrackType)
 ShortAlbum.model_rebuild()
@@ -37,4 +38,6 @@ __all__ = (
     "NewReleasesResponse",
     "NewRelease",
     "S3FileUrl",
+    "AccountSettings",
+    "SetAccountSettingsBody",
 )

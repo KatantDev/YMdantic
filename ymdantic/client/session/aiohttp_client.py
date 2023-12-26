@@ -5,9 +5,11 @@ from typing import Optional, Any, Dict, AsyncIterator
 
 from aiohttp import ClientSession, FormData, ClientError, ClientTimeout
 from dataclass_rest.base_client import BaseClient
+from dataclass_rest.client_protocol import FactoryProtocol
 from dataclass_rest.exceptions import ClientLibraryError
 from dataclass_rest.http_request import HttpRequest
 
+from ymdantic.adapters import PydanticFactoryBody, PydanticFactoryArgs
 from ymdantic.client.session.aiohttp_method import YMHttpMethod
 
 
@@ -26,6 +28,12 @@ class AiohttpClient(BaseClient):
 
         self.timeout: ClientTimeout = timeout or ClientTimeout(total=0)
         self._session: Optional[ClientSession] = None
+
+    def _init_request_body_factory(self) -> FactoryProtocol:
+        return PydanticFactoryBody()
+
+    def _init_request_args_factory(self) -> FactoryProtocol:
+        return PydanticFactoryArgs()
 
     @asynccontextmanager
     async def context(self, auto_close: bool = True) -> AsyncIterator["AiohttpClient"]:

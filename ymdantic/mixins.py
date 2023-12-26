@@ -1,32 +1,36 @@
 from typing import Dict, Any, TYPE_CHECKING
+from typing_extensions import Self
 
-from pydantic import model_validator, ValidationInfo
+from pydantic import model_validator, PrivateAttr, BaseModel
 
 if TYPE_CHECKING:
     from ymdantic import YMClient
 
 
-class ClientMixin:
+class ClientMixin(BaseModel):
     """Миксин, добавляющий в Pydantic модель клиент для отправки запросов."""
 
-    _client: "YMClient"
+    _client: "YMClient" = PrivateAttr()
 
-    @model_validator(mode="before")
-    def inject_ym_client(
-        cls,
-        obj: Dict[str, Any],
-        info: ValidationInfo,
-    ) -> Dict[str, Any]:
+    def model_post_init(self, __context: Any) -> None:
         """
-        Валидатор, добавляющий в модель клиент для отправки запросов.
+        После инициализации модели миксин добавляет в данные модели инстанс клиента.
 
-        :param obj: Словарь с данными модели.
-        :param info: Информация о валидации.
-        :return: Словарь с данными модели.
+        :param __context: Контекст при валидации модели.
         """
-        if info.context is not None:
-            cls._client = info.context.get("client")
-        return obj
+        self._client = __context.get("bot") if __context else None
+
+    def as_(self, client: "YMClient") -> Self:
+        """
+        Добавляет инстанс бота в уже созданный объект.
+
+        Требуется, если мы не добавили его при валидации модели.
+
+        :param client: Инстанс клиента
+        :return: self
+        """
+        self._client = client
+        return self
 
 
 class DeprecatedMixin:

@@ -1,11 +1,9 @@
 # mypy: disable-error-code="empty-body"
 from typing import List, Union, Optional
 
-from dataclass_rest import get
-from dataclass_rest.client_protocol import FactoryProtocol
+from dataclass_rest import get, post
 from pydantic import HttpUrl
 
-from ymdantic.adapters.pydantic_factory import PydanticFactory
 from ymdantic.client.session import AiohttpClient
 from ymdantic.exceptions import UndefinedUser
 from ymdantic.models import (
@@ -21,6 +19,8 @@ from ymdantic.models import (
     NewReleasesBlock,
     S3FileUrl,
     DownloadInfoDirect,
+    AccountSettings,
+    SetAccountSettingsBody,
 )
 
 
@@ -40,9 +40,6 @@ class YMClient(AiohttpClient):
                 "X-Yandex-Music-Client": "YandexMusic/649",
             },
         )
-
-    def _init_request_body_factory(self) -> FactoryProtocol:
-        return PydanticFactory()
 
     async def get_track(self, track_id: Union[int, str]) -> TrackType:
         response = await self.get_track_request(track_id=track_id)
@@ -201,4 +198,26 @@ class YMClient(AiohttpClient):
 
     @get("landing/block/new-releases")
     async def get_recommended_new_releases_request(self) -> NewReleasesResponse:
+        ...
+
+    async def get_account_settings(self) -> AccountSettings:
+        response = await self.get_account_settings_request()
+        return response.result
+
+    @get("account/settings")
+    async def get_account_settings_request(self) -> Response[AccountSettings]:
+        ...
+
+    async def set_account_settings(
+        self,
+        settings: SetAccountSettingsBody,
+    ) -> AccountSettings:
+        response = await self.set_account_settings_request(params=settings)
+        return response.result
+
+    @post("account/settings")
+    async def set_account_settings_request(
+        self,
+        params: SetAccountSettingsBody,
+    ) -> Response[AccountSettings]:
         ...
