@@ -1,7 +1,12 @@
-from enum import Enum
+import sys
+
+if sys.version_info >= (3, 11):
+    from enum import StrEnum
+else:
+    from strenum import StrEnum
 
 
-class EditorialCompilationEnum(str, Enum):
+class EditorialCompilationEnum(StrEnum):
     """Перечисление, представляющее типы блоков с подборками на главной странице."""
 
     ALL_NEWYEAR = "ALL_newyear"

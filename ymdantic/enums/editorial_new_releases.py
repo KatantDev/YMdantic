@@ -1,7 +1,12 @@
-from enum import Enum
+import sys
+
+if sys.version_info >= (3, 11):
+    from enum import StrEnum
+else:
+    from strenum import StrEnum
 
 
-class EditorialNewReleasesEnum(str, Enum):
+class EditorialNewReleasesEnum(StrEnum):
     """Перечисление, представляющее типы блоков с новинками на главной странице."""
 
     ALL_ALBUMS_OF_THE_MONTH = "ALL_albums_of_the_month"

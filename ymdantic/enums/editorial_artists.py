@@ -1,7 +1,12 @@
-from enum import Enum
+import sys
+
+if sys.version_info >= (3, 11):
+    from enum import StrEnum
+else:
+    from strenum import StrEnum
 
 
-class EditorialArtistsEnum(str, Enum):
+class EditorialArtistsEnum(StrEnum):
     """Перечисление, представляющее типы блоков с артистами на главной странице."""
 
     ALL_ISRKA = "ALL_isrka"

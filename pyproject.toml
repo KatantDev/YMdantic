@@ -11,6 +11,7 @@ aiohttp = "^3.9.0"
 pydantic = "^2.4"
 dataclass-rest = "^0.4"
 certifi = "^2023.7.22"
+strenum = "^0.4.15"
 
 
 [tool.poetry.group.dev.dependencies]
