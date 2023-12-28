@@ -10,7 +10,7 @@ python = "^3.8"
 aiohttp = "^3.9.0"
 pydantic = "^2.4"
 dataclass-rest = "^0.4"
-certifi = "^2023.11.17"
+certifi = "^2023.7.22"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -20,7 +20,7 @@ ruff = "^0.1"
 pre-commit = "^3"
 
 [tool.black]
-target-version = ['py310', 'py311', 'py312']
+target-version = ['py38', 'py39', 'py310', 'py311', 'py312']
 exclude = '''
 (
     \.eggs
@@ -55,7 +55,7 @@ exclude = [
     "scripts",
     "*.egg-info",
 ]
-target-version = "py310"
+target-version = "py38"
 
 [tool.ruff.isort]
 known-first-party = [

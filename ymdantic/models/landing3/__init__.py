@@ -1,3 +1,3 @@
-from .block import ChartBlock, NewReleasesBlock
+from .block import OldChartBlock, NewReleasesBlock
 
-__all__ = ("ChartBlock", "NewReleasesBlock")
+__all__ = ("OldChartBlock", "NewReleasesBlock")

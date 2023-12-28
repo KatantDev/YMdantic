@@ -1,7 +1,7 @@
 from typing import Literal, TypeVar, List
 
 from ymdantic.models.base import YMBaseModel
-from ymdantic.models.landing3.chart import Chart
+from ymdantic.models.landing3.chart import OldChart
 from ymdantic.models.landing3.menu import Menu
 
 BlockType = Literal["chart", "new-releases"]
@@ -21,7 +21,7 @@ class BaseBlock(YMBaseModel):
     # Заголовок блока.
 
 
-class ChartBlock(BaseBlock):
+class OldChartBlock(BaseBlock):
     """Pydantic модель, представляющая информацию о блоке с чартами."""
 
     menu: Menu
@@ -32,7 +32,7 @@ class ChartBlock(BaseBlock):
     # Тип для источника блока. В данном случае "chart".
     chart_description: str
     # Описание списка чартов.
-    chart: Chart
+    chart: OldChart
     # Объект чарта, содержащий информацию о нём (является плейлистом).
 
 

@@ -4,9 +4,9 @@ from typing import List
 from pydantic import HttpUrl
 
 from ymdantic.models.base import YMBaseModel
-from ymdantic.models.landing.landing_album import LandingAlbum
-from ymdantic.models.landing.landing_artist import LandingArtist
-from ymdantic.models.landing.landing_cover import LandingPlaylistCover
+from ymdantic.models.landing.album import LandingAlbum
+from ymdantic.models.landing.artist import LandingArtist
+from ymdantic.models.landing.cover import LandingPlaylistCover
 
 
 class NewRelease(YMBaseModel):

@@ -9,7 +9,7 @@ from ymdantic.models.chart_position import ChartPosition
 from ymdantic.models.tracks.r128 import R128
 from ymdantic.models.tracks.fade import Fade
 from ymdantic.models.tracks.derived_colors import DerivedColors
-from ymdantic.models.tracks.track_album import TrackAlbum
+from ymdantic.models.tracks.album import TrackAlbum
 from ymdantic.models.tracks.lyrics_info import LyricsInfo
 from ymdantic.models.tracks.major import Major
 from ymdantic.models.tracks.download_info import DownloadInfo, DownloadInfoDirect

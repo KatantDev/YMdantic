@@ -8,7 +8,7 @@ from .major import Major
 from .r128 import R128
 from .track import Track, UnavailableTrack
 from .podcast import Podcast, UnavailablePodcast
-from .track_album import TrackAlbum
+from .album import TrackAlbum
 
 TrackType = Union[Track, UnavailableTrack, Podcast, UnavailablePodcast]
 
