@@ -29,7 +29,7 @@ class LandingPlaylistCover(YMBaseModel):
 class LandingCover(YMBaseModel):
     """Pydantic модель, представляющая информацию об обложке на лендинге."""
 
-    uri: str  # TODO: get_url
+    uri: str
     # URI обложки.
     color: str
     # Основной цвет обложки.

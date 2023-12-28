@@ -1,5 +1,7 @@
 from typing import Literal
 
+from pydantic import HttpUrl
+
 from ymdantic.models.base import YMBaseModel
 from ymdantic.models.landing.cover import LandingPlaylistCover
 
@@ -17,6 +19,15 @@ class LandingPlaylist(YMBaseModel):
     # Название плейлиста.
     cover: LandingPlaylistCover
     # Обложка плейлиста. Содержит информацию о цветах обложки и URI обложки.
+
+    def get_cover_image_url(self, size: str = "200x200") -> HttpUrl:
+        """
+        Возвращает ссылку на изображение обложки.
+
+        :param size: Размер изображения.
+        :return: Ссылка на изображение обложки.
+        """
+        return self.cover.get_image_url(size)
 
 
 class LandingPlaylistItemData(YMBaseModel):
