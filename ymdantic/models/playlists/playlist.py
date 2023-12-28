@@ -8,8 +8,8 @@ from ymdantic.models.base import YMBaseModel
 from ymdantic.models.custom_wave import CustomWave
 from ymdantic.models.pager import Pager
 from ymdantic.models.playlists.owner import PlaylistOwner
-from ymdantic.models.playlists.playlist_cover import PlaylistCover
-from ymdantic.models.playlists.playlist_track import PlaylistTrack
+from ymdantic.models.playlists.cover import PlaylistCover
+from ymdantic.models.playlists.track import PlaylistTrack
 from ymdantic.models.playlists.tag import Tag
 
 
@@ -46,12 +46,8 @@ class BasePlaylist(YMBaseModel):
     # Является ли плейлист премьерой.
     duration_ms: int
     # Длительность плейлиста в миллисекундах.
-    cover: PlaylistCover
-    # Обложка плейлиста.
     og_image: str
     # OG-изображение плейлиста. Может быть преобразовано в URL.
-    tags: List[Tag]
-    # Теги плейлиста.
     playlist_uuid: Optional[str] = None
     # UUID плейлиста.
 
@@ -63,19 +59,14 @@ class BasePlaylist(YMBaseModel):
         """
         return HttpUrl(f"https://{self.og_image.replace('%%', size)}")
 
-    def get_cover_image_url(self, size: str = "200x200") -> HttpUrl:
-        """
-        Возвращает URL изображения обложки плейлиста с заданным размером.
-
-        :param size: Размер изображения.
-        :return: URL изображения обложки плейлиста с заданным размером.
-        """
-        return self.cover.get_image_url(size)
-
 
 class ShortPlaylist(BasePlaylist):
     """Pydantic модель, представляющая краткую информацию о плейлисте."""
 
+    cover: PlaylistCover
+    # Обложка плейлиста.
+    tags: List[Tag]
+    # Теги плейлиста.
     id_for_from: Optional[str] = None
     # Идентификатор для источника плейлиста.
     og_title: Optional[str] = None
@@ -104,6 +95,15 @@ class ShortPlaylist(BasePlaylist):
     # Цвет фона плейлиста.
     child_content: Optional[bool] = None
     # Содержит ли плейлист детский контент.
+
+    def get_cover_image_url(self, size: str = "200x200") -> HttpUrl:
+        """
+        Возвращает URL изображения обложки плейлиста с заданным размером.
+
+        :param size: Размер изображения.
+        :return: URL изображения обложки плейлиста с заданным размером.
+        """
+        return self.cover.get_image_url(size)
 
     @field_validator("background_color", mode="before")
     @classmethod

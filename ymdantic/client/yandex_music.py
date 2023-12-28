@@ -13,7 +13,7 @@ from ymdantic.models import (
     Response,
     ShortAlbum,
     Album,
-    ChartBlock,
+    OldChartBlock,
     Playlist,
     TrackType,
     DownloadInfo,
@@ -28,13 +28,23 @@ from ymdantic.models import (
     LandingArtistItem,
     LandingAlbumItemData,
     LandingAlbumItem,
-    LandingPlaylistItem,
-    LandingPlaylistItemData,
+    LandingLikedPlaylistItem,
+    LandingLikedPlaylistItemData,
     LandingPromotion,
     LandingPromotionResponse,
     LandingOpenPlaylist,
     LandingSpecial,
+    LandingPersonalPlaylistItemData,
+    LandingPersonalPlaylistItem,
+    LandingPlaylistItem,
+    LandingPlaylistItemData,
+    ChartBlock,
+    InStyle,
+    InStyleResponse,
+    LandingWaves,
+    LandingWavesResponse,
 )
+from ymdantic.models.landing.artist import LandingArtistItemData
 
 
 class YMClient(AiohttpClient):
@@ -123,15 +133,15 @@ class YMClient(AiohttpClient):
     ) -> S3FileUrl:
         ...
 
-    async def get_chart(self, limit: Optional[int] = None) -> ChartBlock:
-        response = await self.get_chart_request(limit=limit)
+    async def get_old_chart(self, limit: Optional[int] = None) -> OldChartBlock:
+        response = await self.get_old_chart_request(limit=limit)
         return response.result
 
     @get("landing3/chart")
-    async def get_chart_request(
+    async def get_old_chart_request(
         self,
         limit: Optional[int] = None,
-    ) -> Response[ChartBlock]:
+    ) -> Response[OldChartBlock]:
         ...
 
     async def get_new_releases_old(self) -> NewReleasesBlock:
@@ -246,7 +256,7 @@ class YMClient(AiohttpClient):
     async def get_editorial_compilation(
         self,
         block_type: enums.EditorialCompilationEnum,
-    ) -> Union[List[LandingAlbumItemData], List[LandingPlaylistItemData]]:
+    ) -> Union[List[LandingAlbumItemData], List[LandingLikedPlaylistItemData]]:
         response = await self.get_editorial_compilation_request(
             block_type=block_type,
         )
@@ -256,7 +266,7 @@ class YMClient(AiohttpClient):
     async def get_editorial_compilation_request(
         self,
         block_type: enums.EditorialCompilationEnum,
-    ) -> EditorialResponse[Union[LandingAlbumItem, LandingPlaylistItem]]:
+    ) -> EditorialResponse[Union[LandingAlbumItem, LandingLikedPlaylistItem]]:
         ...
 
     async def get_editorial_promotions(
@@ -288,4 +298,80 @@ class YMClient(AiohttpClient):
         self,
         block_type: enums.SpecialEnum,
     ) -> LandingSpecial:
+        ...
+
+    async def get_personal_playlists(self) -> List[LandingPersonalPlaylistItemData]:
+        response = await self.get_personal_playlists_request()
+        return [item.data for item in response.items]
+
+    @get("landing/block/personal-playlists")
+    async def get_personal_playlists_request(
+        self,
+    ) -> EditorialResponse[LandingPersonalPlaylistItem]:
+        ...
+
+    async def get_new_playlists(self) -> List[LandingLikedPlaylistItemData]:
+        response = await self.get_new_playlists_request()
+        return [item.data for item in response.items]
+
+    @get("landing/block/new-playlists")
+    async def get_new_playlists_request(
+        self,
+    ) -> EditorialResponse[LandingLikedPlaylistItem]:
+        ...
+
+    async def get_personal_artists(self) -> List[LandingArtist]:
+        response = await self.get_personal_artists_request()
+        return [item.data.artist for item in response.items]
+
+    @get("landing/block/personal-artists")
+    async def get_personal_artists_request(
+        self,
+    ) -> EditorialResponse[LandingArtistItem]:
+        ...
+
+    async def get_recently_played(
+        self,
+    ) -> List[
+        Union[LandingPlaylistItemData, LandingArtistItemData, LandingAlbumItemData]
+    ]:
+        response = await self.get_recently_played_request()
+        return [item.data for item in response.items]
+
+    @get("landing/block/recently-played")
+    async def get_recently_played_request(
+        self,
+    ) -> EditorialResponse[
+        Union[LandingPlaylistItem, LandingArtistItem, LandingAlbumItem]
+    ]:
+        ...
+
+    # Не нужен отдельный метод, так как возвращается прямой результат.
+    @get("landing/block/chart")
+    async def get_chart(
+        self,
+        limit: Optional[int] = None,
+    ) -> ChartBlock:
+        ...
+
+    async def get_in_style(self) -> List[InStyle]:
+        response = await self.get_in_style_request()
+        return response.in_style_tabs
+
+    @get("landing/block/in-style")
+    async def get_in_style_request(
+        self,
+        limit: Optional[int] = None,
+    ) -> InStyleResponse:
+        ...
+
+    async def get_waves(self) -> List[LandingWaves]:
+        response = await self.get_waves_request()
+        return response.waves
+
+    @get("landing/block/waves")
+    async def get_waves_request(
+        self,
+        limit: Optional[int] = None,
+    ) -> LandingWavesResponse:
         ...

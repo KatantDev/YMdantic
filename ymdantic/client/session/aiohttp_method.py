@@ -83,9 +83,11 @@ class YMHttpMethod(AiohttpMethod):
         """
         response_json = await response.json()
         if 400 <= response.status <= 500:
+            if "error" in response_json:
+                response_json = response_json["error"]
             raise YandexMusicError(
                 error=YandexMusicErrorModel.model_validate(
-                    response_json.get("error"),
+                    response_json,
                 ),
             )
 

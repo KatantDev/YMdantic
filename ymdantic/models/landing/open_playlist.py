@@ -4,7 +4,7 @@ from pydantic import HttpUrl
 
 from ymdantic.models.tracks import TrackType
 from ymdantic.models.base import YMBaseModel
-from ymdantic.models.landing.landing_playlist import LandingPlaylist
+from ymdantic.models.landing.playlist import LandingPlaylist
 
 
 class LandingOpenPlaylistCover(YMBaseModel):

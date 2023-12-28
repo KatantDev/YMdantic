@@ -3,7 +3,7 @@ from typing import Literal
 from pydantic import HttpUrl
 
 from ymdantic.models.base import YMBaseModel
-from ymdantic.models.landing.landing_cover import LandingCover
+from ymdantic.models.landing.cover import LandingCover
 
 
 class LandingArtist(YMBaseModel):

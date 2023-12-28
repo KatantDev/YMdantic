@@ -2,7 +2,7 @@ from datetime import date
 from typing import Optional
 
 from ymdantic.models.albums import BaseAlbum
-from ymdantic.models.tracks.track_position import TrackPosition
+from ymdantic.models.tracks.position import TrackPosition
 
 
 class TrackAlbum(BaseAlbum):

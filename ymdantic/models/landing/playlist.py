@@ -1,7 +1,7 @@
 from typing import Literal
 
 from ymdantic.models.base import YMBaseModel
-from ymdantic.models.landing.landing_cover import LandingPlaylistCover
+from ymdantic.models.landing.cover import LandingPlaylistCover
 
 
 class LandingPlaylist(YMBaseModel):
@@ -24,8 +24,6 @@ class LandingPlaylistItemData(YMBaseModel):
 
     playlist: LandingPlaylist
     # Информация о плейлисте.
-    likes_count: int
-    # Количество лайков плейлиста.
 
 
 class LandingPlaylistItem(YMBaseModel):
@@ -35,7 +33,7 @@ class LandingPlaylistItem(YMBaseModel):
     В данном случае, о плейлисте.
     """
 
-    type: Literal["liked_playlist_item"]
+    type: Literal["playlist_item"]
     # Тип элемента.
     data: LandingPlaylistItemData
     # Информация о блоке плейлиста.

@@ -3,7 +3,7 @@ from typing import List, Optional, Literal
 
 from ymdantic.mixins import DeprecatedMixin
 from ymdantic.models.tracks.track import UnavailableTrack, Track
-from ymdantic.models.tracks.track_album import TrackAlbum
+from ymdantic.models.tracks.album import TrackAlbum
 
 PodcastEpisodeType = Literal["full", "bonus", "trailer"]
 

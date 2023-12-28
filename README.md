@@ -25,9 +25,11 @@ poetry add ymdantic
 
 ## Пример использования
 Получаем список чартов и выводим треки
+
 ```python
 import asyncio
 from ymdantic import YMClient
+
 
 async def get_chart(client: YMClient) -> None:
     chart_block = await client.get_chart()
