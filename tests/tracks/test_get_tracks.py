@@ -1,8 +1,8 @@
 import asyncio
 import secrets
-from typing import TypedDict
 
 import pytest
+from typing_extensions import Type, TypedDict
 from ymdantic import YMClient
 from ymdantic.exceptions.custom_exceptions import YMTrackNotFoundError
 from ymdantic.models import Podcast, Track, UnavailablePodcast, UnavailableTrack
@@ -14,7 +14,7 @@ class TrackExpected(TypedDict):
 
     type: str
     available: bool
-    instance_type: type[BaseTrack]
+    instance_type: Type[BaseTrack]
 
 
 @pytest.mark.anyio
