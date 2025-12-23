@@ -1,77 +1,77 @@
-from .editorial import (
-    NewReleasesResponse,
-    NewRelease,
-    EditorialResponse,
-)
-from .artist import (
-    LandingArtist,
-    LandingArtistItemData,
-    LandingArtistItem,
-)
-from .album import (
+from ymdantic.models.landing.album import (
     LandingAlbum,
-    LandingAlbumItemData,
     LandingAlbumItem,
+    LandingAlbumItemData,
 )
-from .playlist import (
-    LandingPlaylist,
-    LandingPlaylistItemData,
-    LandingPlaylistItem,
+from ymdantic.models.landing.artist import (
+    LandingArtist,
+    LandingArtistItem,
+    LandingArtistItemData,
 )
-from .liked_playlist import (
-    LandingLikedPlaylistItemData,
-    LandingLikedPlaylistItem,
+from ymdantic.models.landing.chart import Chart
+from ymdantic.models.landing.chart_block import ChartBlock
+from ymdantic.models.landing.editorial import (
+    EditorialResponse,
+    NewRelease,
+    NewReleasesResponse,
 )
-from .personal_playlist import (
-    LandingPersonalPlaylistItemData,
-    LandingPersonalPlaylistItem,
-)
-from .promotion import (
-    LandingPromotion,
-    LandingPromotionResponse,
-)
-from .open_playlist import LandingOpenPlaylist
-from .special import LandingSpecial
-from .skeleton import SkeletonResponse
-from .chart import Chart
-from .chart_block import ChartBlock
-from .in_style import (
+from ymdantic.models.landing.in_style import (
     InStyle,
     InStyleResponse,
 )
-from .waves import (
+from ymdantic.models.landing.liked_playlist import (
+    LandingLikedPlaylistItem,
+    LandingLikedPlaylistItemData,
+)
+from ymdantic.models.landing.open_playlist import LandingOpenPlaylist
+from ymdantic.models.landing.personal_playlist import (
+    LandingPersonalPlaylistItem,
+    LandingPersonalPlaylistItemData,
+)
+from ymdantic.models.landing.playlist import (
+    LandingPlaylist,
+    LandingPlaylistItem,
+    LandingPlaylistItemData,
+)
+from ymdantic.models.landing.promotion import (
+    LandingPromotion,
+    LandingPromotionResponse,
+)
+from ymdantic.models.landing.skeleton import SkeletonResponse
+from ymdantic.models.landing.special import LandingSpecial
+from ymdantic.models.landing.waves import (
     LandingCustomWave,
     LandingWaves,
     LandingWavesResponse,
 )
 
 __all__ = (
-    "NewReleasesResponse",
-    "NewRelease",
-    "SkeletonResponse",
-    "EditorialResponse",
-    "LandingArtist",
-    "LandingArtistItemData",
-    "LandingArtistItem",
-    "LandingAlbum",
-    "LandingAlbumItemData",
-    "LandingAlbumItem",
-    "LandingPlaylist",
-    "LandingPlaylistItemData",
-    "LandingPlaylistItem",
-    "LandingLikedPlaylistItemData",
-    "LandingLikedPlaylistItem",
-    "LandingPersonalPlaylistItemData",
-    "LandingPersonalPlaylistItem",
-    "LandingPromotion",
-    "LandingPromotionResponse",
-    "LandingOpenPlaylist",
-    "LandingSpecial",
     "Chart",
     "ChartBlock",
+    "EditorialResponse",
     "InStyle",
     "InStyleResponse",
+    "LandingAlbum",
+    "LandingAlbumItem",
+    "LandingAlbumItemData",
+    "LandingArtist",
+    "LandingArtistItem",
+    "LandingArtistItemData",
     "LandingCustomWave",
+    "LandingLikedPlaylistItem",
+    "LandingLikedPlaylistItemData",
+    "LandingOpenPlaylist",
+    "LandingPersonalPlaylistItem",
+    "LandingPersonalPlaylistItemData",
+    "LandingPlaylist",
+    "LandingPlaylistItem",
+    "LandingPlaylistItemData",
+    "LandingPromotion",
+    "LandingPromotionResponse",
+    "LandingSpecial",
     "LandingWaves",
     "LandingWavesResponse",
+    "NewRelease",
+    "NewReleasesResponse",
+    "SkeletonResponse",
 )

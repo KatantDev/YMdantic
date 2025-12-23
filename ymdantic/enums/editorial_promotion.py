@@ -7,6 +7,8 @@ else:
 
 
 class EditorialPromotionEnum(StrEnum):
+    """Перечисление типов промо-блоков на главной странице."""
+
     NEUROMUSIC = "NEUROMUSIC"
     KOSTYL_VREMYA_KLIPOV = "kostyl_vremya_klipov"
     NY_PROMO = "NY_promo"

@@ -1,39 +1,41 @@
+"""Модели подкастов."""
+
 from datetime import date
-from typing import List, Optional, Literal
+from typing import Literal
 
 from ymdantic.mixins import DeprecatedMixin
-from ymdantic.models.tracks.track import UnavailableTrack, Track
 from ymdantic.models.tracks.album import TrackAlbum
+from ymdantic.models.tracks.track import Track, UnavailableTrack
 
 PodcastEpisodeType = Literal["full", "bonus", "trailer"]
 
 
 class UnavailablePodcast(UnavailableTrack, DeprecatedMixin):
-    """Pydantic модель, представляющая информацию о недоступном подкасте."""
+    """Модель информации о недоступном подкасте."""
 
-    type: Literal["music", "comment"]  # type: ignore[assignment]
+    type: Literal["music", "comment", "podcast-episode"]  # type: ignore[assignment]
     # Тип трека. Возможные значения: "music", "comment".
     # (почему-то не "podcast-episode")
-    albums: List[TrackAlbum]
+    albums: list[TrackAlbum]
     # Список альбомов, в которых присутствует подкаст.
-    podcast_episode_type: Optional[PodcastEpisodeType] = None
+    podcast_episode_type: PodcastEpisodeType | None = None
     # Тип эпизода подкаста (если есть).
-    pub_date: Optional[date] = None
+    pub_date: date | None = None
     # Дата публикации подкаста (если есть).
-    short_description: Optional[str] = None
+    short_description: str | None = None
     # Краткое описание подкаста (если есть).
 
 
 class Podcast(Track):
-    """Pydantic модель, представляющая информацию о подкасте."""
+    """Модель информации о доступном подкасте."""
 
     type: Literal["podcast-episode", "comment"]  # type: ignore[assignment]
     # Тип трека. Возможные значения: "podcast-episode", "comment".
-    albums: List[TrackAlbum]
+    albums: list[TrackAlbum]
     # Список альбомов, в которых присутствует подкаст.
-    podcast_episode_type: Optional[PodcastEpisodeType] = None
+    podcast_episode_type: PodcastEpisodeType | None = None
     # Тип эпизода подкаста (если есть).
-    pub_date: Optional[date] = None
+    pub_date: date | None = None
     # Дата публикации подкаста (если есть).
-    short_description: Optional[str] = None
+    short_description: str | None = None
     # Краткое описание подкаста (если есть).

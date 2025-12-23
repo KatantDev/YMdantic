@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import List
 
 from pydantic import HttpUrl
 
@@ -14,7 +13,7 @@ class NewRelease(YMBaseModel):
 
     cover: LandingPlaylistCover
     # Обложка плейлиста. Содержит информацию о цветах обложки и URI обложки.
-    artists: List[LandingArtist]
+    artists: list[LandingArtist]
     # Список артистов, участвующих в новых релизах.
     album: LandingAlbum
     # Информация об альбоме в новых релизах.
@@ -34,5 +33,5 @@ class NewRelease(YMBaseModel):
 class NewReleasesResponse(YMBaseModel):
     """Pydantic модель, представляющая ответ на запрос о новых релизах."""
 
-    new_releases: List[NewRelease]
+    new_releases: list[NewRelease]
     # Список новых релизов.

@@ -1,14 +1,16 @@
-from typing import List, Optional, Dict, Any, Literal
-
-from pydantic import model_validator, HttpUrl
+from pydantic import HttpUrl
 
 from ymdantic.mixins import DeprecatedMixin
+from ymdantic.models.artists.counts import Counts
+from ymdantic.models.artists.extra_action import ExtraAction
+from ymdantic.models.artists.ratings import Ratings
+from ymdantic.models.artists.social_link import SocialLink
 from ymdantic.models.base import YMBaseModel
 from ymdantic.models.cover import Cover
 
 
-class Artist(YMBaseModel, DeprecatedMixin):
-    """Pydantic модель, представляющая информацию об артисте."""
+class ShortArtist(YMBaseModel, DeprecatedMixin):
+    """Pydantic модель, представляющая краткую информацию об артисте."""
 
     id: int
     # Уникальный идентификатор артиста.
@@ -18,33 +20,14 @@ class Artist(YMBaseModel, DeprecatedMixin):
     # Флаг, указывающий, является ли артист группой.
     composer: bool
     # Флаг, указывающий, является ли артист композитором.
-    genres: List[str]
+    genres: list[str]
     # Жанры треков артиста.
-    disclaimers: List[Literal[""]]  # TODO: Проверить, что тут может быть.
+    disclaimers: list[str]  # TODO: Проверить, что тут может быть.
     # Список отказов от ответственности артиста.
-    cover: Optional[Cover] = None
+    cover: Cover | None = None
     # Обложка артиста.
 
-    @model_validator(mode="before")
-    def validate_genres(cls, artist: Dict[str, Any]) -> Dict[str, Any]:
-        """
-        Этот метод класса конвертирует жанры в данных об артисте в новый вид.
-
-        Он проверяет, присутствует ли ключ 'genre' в словаре альбома. Если
-        он присутствует, он присваивает список, содержащий жанр,
-        ключу 'genres' словаря альбома. Если ключ 'genre' отсутствует,
-        он присваивает пустой список ключу 'genres'.
-
-        :param artist: Словарь, содержащий информацию об артисте.
-        :return: Словарь, содержащий информацию об артисте с конвертированными
-            жанрами.
-        """
-        genre = artist.get("genre")
-        artist.pop("genre", None)
-        artist["genres"] = [genre] if genre else []
-        return artist
-
-    def get_cover_image_url(self, size: str = "200x200") -> Optional[HttpUrl]:
+    def get_cover_image_url(self, size: str = "200x200") -> HttpUrl | None:
         """
         Возвращает URL изображения обложки артиста с заданным размером.
 
@@ -54,3 +37,39 @@ class Artist(YMBaseModel, DeprecatedMixin):
         if self.cover is None:
             return None
         return self.cover.get_image_url(size)
+
+
+class SimilarArtist(ShortArtist):
+    """Pydantic модель, представляющая похожего артиста."""
+
+    available: bool
+    # Флаг, указывающий, доступен ли артист для прослушивания.
+    counts: Counts
+    # Счетчики артиста (количество треков, альбомов).
+    tickets_available: bool
+    # Флаг, указывающий, доступны ли билеты на концерты артиста.
+
+
+class Artist(SimilarArtist):
+    """Pydantic модель, представляющая подробную информацию об артисте."""
+
+    og_image: str
+    # OG изображение артиста.
+    ratings: Ratings | None = None  # TODO: Проверить может ли быть None у доступных
+    # Рейтинги артиста.
+    links: list[SocialLink]
+    # Список ссылок на социальные сети артиста.
+    likes_count: int
+    # Количество лайков артиста.
+    db_aliases: list[str]
+    # Список псевдонимов артиста в базе данных (для поиска).
+    extra_actions: list[ExtraAction]
+
+    def get_og_image_url(self, size: str = "200x200") -> HttpUrl:
+        """
+        Возвращает URL OG-изображения артиста с заданным размером.
+
+        :param size: Размер изображения.
+        :return: URL OG-изображения артиста с заданным размером.
+        """
+        return HttpUrl(f"https://{self.og_image.replace('%%', size)}")

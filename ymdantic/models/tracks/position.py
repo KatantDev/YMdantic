@@ -1,8 +1,10 @@
+"""Модель позиции трека в альбоме."""
+
 from ymdantic.models.base import YMBaseModel
 
 
 class TrackPosition(YMBaseModel):
-    """Pydantic модель, представляющая позицию трека в альбоме."""
+    """Модель позиции трека в альбоме."""
 
     volume: int
     # Номер диска, на котором находится трек.

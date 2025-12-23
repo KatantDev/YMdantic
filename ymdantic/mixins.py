@@ -1,6 +1,6 @@
-from typing import Dict, Any, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
-from pydantic import model_validator, ValidationInfo
+from pydantic import ValidationInfo, model_validator
 
 if TYPE_CHECKING:
     from ymdantic import YMClient
@@ -12,11 +12,12 @@ class ClientMixin:
     _client: "YMClient"
 
     @model_validator(mode="before")
+    @classmethod
     def inject_ym_client(
         cls,
-        obj: Dict[str, Any],
+        obj: dict[str, Any],
         info: ValidationInfo,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Валидатор, добавляющий в модель клиент для отправки запросов.
 
@@ -33,7 +34,8 @@ class DeprecatedMixin:
     """Миксин, удаляющий устаревшие поля из модели."""
 
     @model_validator(mode="before")
-    def remove_deprecated(cls, obj: Dict[str, Any]) -> Dict[str, Any]:
+    @classmethod
+    def remove_deprecated(cls, obj: dict[str, Any]) -> dict[str, Any]:
         """
         Удаляет устаревшие поля из модели.
 

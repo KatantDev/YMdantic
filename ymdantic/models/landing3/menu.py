@@ -1,4 +1,4 @@
-from typing import Optional, List, Literal
+from typing import List, Literal, Optional
 
 from ymdantic.models.base import YMBaseModel
 
@@ -15,9 +15,7 @@ class MenuItem(YMBaseModel):
 
 
 class Menu(YMBaseModel):
-    """
-    Pydantic модель, представляющая меню.
-    """
+    """Pydantic модель, представляющая меню."""
 
     items: List[MenuItem]
     # Список элементов меню.

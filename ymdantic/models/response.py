@@ -1,9 +1,8 @@
-from typing import TypeVar, Generic
+from typing import Generic, TypeVar
 
 from pydantic import BaseModel, Field
 
 from ymdantic.mixins import ClientMixin
-
 
 ResponseVar = TypeVar("ResponseVar")
 # Переменная, которая будет использоваться в качестве типа для поля result в
@@ -14,7 +13,7 @@ ResponseVar = TypeVar("ResponseVar")
 
 
 class InvocationInfo(BaseModel):
-    """Pydantic модель, представляющая информацию о вызове."""
+    """Модель информации о вызове."""
 
     hostname: str
     # Имя хоста, на котором был выполнен вызов.
@@ -24,8 +23,8 @@ class InvocationInfo(BaseModel):
     # Продолжительность выполнения запроса в миллисекундах.
 
 
-class Response(BaseModel, Generic[ResponseVar], ClientMixin):
-    """Pydantic модель, представляющая ответ."""
+class Response(BaseModel, ClientMixin, Generic[ResponseVar]):
+    """Модель ответа."""
 
     invocation_info: InvocationInfo = Field(alias="invocationInfo")
     # Информация о вызове.

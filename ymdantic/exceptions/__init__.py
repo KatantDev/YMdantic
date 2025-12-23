@@ -1,3 +1,3 @@
-from .custom_exceptions import YandexMusicError, UndefinedUser
+from ymdantic.exceptions.custom_exceptions import YMError, YMUndefinedUserError
 
-__all__ = ["YandexMusicError", "UndefinedUser"]
+__all__ = ["YMError", "YMUndefinedUserError"]

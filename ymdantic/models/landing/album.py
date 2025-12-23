@@ -1,9 +1,9 @@
-from typing import Literal, Optional, List
+from typing import List, Literal, Optional
 
 from pydantic import HttpUrl
 
-from ymdantic.models.landing.artist import LandingArtist
 from ymdantic.models.base import YMBaseModel
+from ymdantic.models.landing.artist import LandingArtist
 from ymdantic.models.landing.cover import LandingCover
 
 

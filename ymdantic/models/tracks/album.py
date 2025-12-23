@@ -6,7 +6,7 @@ from ymdantic.models.tracks.position import TrackPosition
 
 
 class TrackAlbum(BaseAlbum):
-    """Pydantic модель, представляющая информацию об альбоме с  текущим треком."""
+    """Pydantic модель, представляющая информацию об альбоме с текущим треком."""
 
     start_date: Optional[date] = None
     # Дата начала альбома.

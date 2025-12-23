@@ -22,9 +22,7 @@ class BasePlaylistTrack(YMBaseModel):
 
 
 class PlaylistTrack(BasePlaylistTrack):
-    """
-    Pydantic модель, представляющая детальную информацию о треке в плейлисте.
-    """
+    """Pydantic модель, представляющая детальную информацию о треке в плейлисте."""
 
     original_index: int
     # Исходный индекс трека в плейлисте.

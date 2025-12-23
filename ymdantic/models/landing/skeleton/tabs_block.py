@@ -1,4 +1,4 @@
-from typing import Literal, List
+from typing import List, Literal
 
 from ymdantic.models.base import YMBaseModel
 from ymdantic.models.landing.skeleton.tab_block import Tab

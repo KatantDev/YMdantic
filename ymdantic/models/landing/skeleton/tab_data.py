@@ -1,4 +1,4 @@
-from typing import Optional, Literal
+from typing import Literal, Optional
 
 from ymdantic.models.base import YMBaseModel
 from ymdantic.models.landing.skeleton.tab_source import TabSource

@@ -1,5 +1,3 @@
-from typing import Optional
-
 from pydantic import HttpUrl
 
 from ymdantic.models.base import YMBaseModel
@@ -11,9 +9,9 @@ class LandingPlaylistCover(YMBaseModel):
 
     uri: str  # TODO: get_url
     # URI обложки плейлиста.
-    color: Optional[str] = None
+    color: str | None = None
     # Основной цвет обложки плейлиста.
-    derived_colors: Optional[DerivedColors] = None
+    derived_colors: DerivedColors | None = None
     # Дополнительные цвета обложки плейлиста.
 
     def get_image_url(self, size: str = "200x200") -> HttpUrl:
