@@ -14,6 +14,8 @@ class ShortArtist(YMBaseModel, DeprecatedMixin):
 
     id: int
     # Уникальный идентификатор артиста.
+    available: bool
+    # Флаг, указывающий, доступен ли артист для прослушивания.
     name: str
     # Имя артиста.
     various: bool
@@ -42,8 +44,6 @@ class ShortArtist(YMBaseModel, DeprecatedMixin):
 class SimilarArtist(ShortArtist):
     """Pydantic модель, представляющая похожего артиста."""
 
-    available: bool
-    # Флаг, указывающий, доступен ли артист для прослушивания.
     counts: Counts
     # Счетчики артиста (количество треков, альбомов).
     tickets_available: bool

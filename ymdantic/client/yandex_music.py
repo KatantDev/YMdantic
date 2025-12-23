@@ -1,6 +1,6 @@
-from typing import Sequence
+from typing import Sequence, Unpack
 
-from dataclass_rest import get
+from dataclass_rest import get, post
 from dataclass_rest.client_protocol import FactoryProtocol
 from pydantic import HttpUrl
 
@@ -44,6 +44,7 @@ from ymdantic.models import (
     SkeletonResponse,
     TrackType,
 )
+from ymdantic.models.account import AccountSettings, SetAccountSettingsParams
 from ymdantic.models.landing.artist import LandingArtistItemData
 
 
@@ -67,6 +68,9 @@ class YMClient(AiohttpClient):
         )
 
     def _init_request_body_factory(self) -> FactoryProtocol:
+        return PydanticFactory()
+
+    def _init_request_args_factory(self) -> FactoryProtocol:
         return PydanticFactory()
 
     async def get_track(self, track_id: int | str) -> TrackType:
@@ -379,4 +383,28 @@ class YMClient(AiohttpClient):
         self,
         artist_id: int | str,
     ) -> Response[ArtistData]:
+        raise NotImplementedError
+
+    async def get_account_settings(self) -> AccountSettings:
+        response = await self.get_account_settings_request()
+        return response.result
+
+    @get("account/settings")
+    async def get_account_settings_request(self) -> Response[AccountSettings]:
+        raise NotImplementedError
+
+    async def set_account_settings(
+        self,
+        **params: Unpack[SetAccountSettingsParams],  # type: ignore[misc]
+    ) -> AccountSettings:
+        response = await self.set_account_settings_request(
+            params=SetAccountSettingsParams(**params),
+        )
+        return response.result
+
+    @post("account/settings")
+    async def set_account_settings_request(
+        self,
+        params: SetAccountSettingsParams,
+    ) -> Response[AccountSettings]:
         raise NotImplementedError

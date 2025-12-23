@@ -1,3 +1,7 @@
-from ymdantic.exceptions.custom_exceptions import YMError, YMUndefinedUserError
+from ymdantic.exceptions.custom_exceptions import (
+    YMError,
+    YMTrackNotFoundError,
+    YMUndefinedUserError,
+)
 
-__all__ = ["YMError", "YMUndefinedUserError"]
+__all__ = ["YMError", "YMTrackNotFoundError", "YMUndefinedUserError"]

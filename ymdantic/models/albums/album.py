@@ -1,7 +1,7 @@
 from datetime import date, datetime
-from typing import TYPE_CHECKING, Annotated, Literal
+from typing import TYPE_CHECKING, Annotated, Any, Literal
 
-from pydantic import Field, HttpUrl
+from pydantic import Field, HttpUrl, model_validator
 
 from ymdantic.mixins import DeprecatedMixin
 from ymdantic.models.action_button import ActionButton
@@ -91,6 +91,25 @@ class BaseAlbum(YMBaseModel, DeprecatedMixin):
     # URL фонового видео альбома.
     action_button: ActionButton | None = None
     # Кнопка действия альбома.
+
+    @model_validator(mode="before")
+    @classmethod
+    def validate_genres(cls, album: dict[str, Any]) -> dict[str, Any]:
+        """
+        Этот метод класса конвертирует жанры в данных об альбоме в новый вид.
+
+        Он проверяет, присутствует ли ключ 'genre' в словаре альбома. Если
+        он присутствует, он присваивает список, содержащий жанр,
+        ключу 'genres' словаря альбома. Если ключ 'genre' отсутствует,
+        он присваивает пустой список ключу 'genres'.
+
+        :param album: Словарь, содержащий информацию об альбоме.
+        :return: Словарь, содержащий информацию об альбоме с конвертированными
+            жанрами.
+        """
+        genre = album.pop("genre", None)
+        album["genres"] = [genre] if genre is not None else []
+        return album
 
     def get_og_image_url(self, size: str = "200x200") -> HttpUrl:
         """

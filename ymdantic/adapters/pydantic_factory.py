@@ -2,14 +2,15 @@ from typing import Any, Optional, Type, TypeVar
 
 from pydantic import TypeAdapter
 
+from ymdantic.adapters.to_query_params import bools_to_str
+
 TypeT = TypeVar("TypeT")
 
 
 class PydanticFactory:
     """Фабрика для преобразования данных в pydantic модели."""
 
-    @staticmethod
-    def load(data: Any, type_: Type[TypeT]) -> TypeT:
+    def load(self, data: Any, type_: Type[TypeT]) -> TypeT:
         """
         Преобразование данных в pydantic модель.
 
@@ -23,8 +24,8 @@ class PydanticFactory:
             context={"client": client},
         )
 
-    @staticmethod
     def dump(
+        self,
         data: TypeT,
         class_: Optional[Type[TypeT]] = None,
     ) -> Any:
@@ -37,4 +38,7 @@ class PydanticFactory:
         """
         if class_ is None:
             return None
-        return TypeAdapter(class_).dump_python(data)
+        result = TypeAdapter(class_).dump_python(data, by_alias=True, exclude_none=True)
+        if isinstance(result, dict) and result.get("params"):
+            return bools_to_str(result["params"])
+        return result

@@ -1,6 +1,7 @@
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Self
 
-from pydantic import ValidationInfo, model_validator
+from pydantic import model_validator
+from pydantic_core.core_schema import ValidationInfo
 
 if TYPE_CHECKING:
     from ymdantic import YMClient
@@ -28,6 +29,18 @@ class ClientMixin:
         if info.context is not None:
             cls._client = info.context.get("client")
         return obj
+
+    def as_(self, client: "YMClient") -> Self:
+        """
+        Добавляет инстанс бота в уже созданный объект.
+
+        Требуется, если мы не добавили его при валидации модели.
+
+        :param client: Инстанс клиента
+        :return: self
+        """
+        self._client = client
+        return self
 
 
 class DeprecatedMixin:

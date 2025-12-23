@@ -1,11 +1,9 @@
 import asyncio
-import ssl
 import urllib.parse
 from types import TracebackType
-from typing import Any, Optional, Self, Type
+from typing import Any, Optional, Self
 
-import certifi
-from aiohttp import ClientError, ClientSession, ClientTimeout, FormData, TCPConnector
+from aiohttp import ClientError, ClientSession, ClientTimeout, FormData
 from dataclass_rest.base_client import BaseClient
 from dataclass_rest.exceptions import ClientLibraryError
 from dataclass_rest.http_request import HttpRequest
@@ -14,53 +12,31 @@ from ymdantic.client.session.aiohttp_method import YMHttpMethod
 
 
 class AiohttpClient(BaseClient):
-    """Базовый клиент для работы с API Яндекс Музыки."""
+    """Базовый клиент для работы с API через aiohttp."""
 
     method_class = YMHttpMethod
 
     def __init__(
         self,
         base_url: str,
+        session: Optional[ClientSession] = None,
         headers: Optional[dict[str, Any]] = None,
         timeout: Optional[ClientTimeout] = None,
     ) -> None:
         super().__init__()
         self.base_url = base_url
         self.headers = headers or {}
-        self.timeout: ClientTimeout = timeout or ClientTimeout(total=0)
 
-        self._session: Optional[ClientSession] = None
-        self._connector_type: Type[TCPConnector] = TCPConnector
-        self._connector_init: dict[str, Any] = {
-            "ssl": ssl.create_default_context(cafile=certifi.where()),
-            "limit": 100,
-            "ttl_dns_cache": 3600,
-        }
-
-    async def get_session(self) -> ClientSession:
-        """
-        Этот метод используется для получения текущей сессии.
-
-        Если сессия None или закрыта, он создает новую ClientSession с указанным
-        коннектором и заголовками.
-
-        :return: Текущую сессию, если она существует и открыта, в противном случае
-            новую сессию.
-        """
-        if self._session is None or self._session.closed:
-            self._session = ClientSession(
-                connector=self._connector_type(**self._connector_init),
-                headers=self.headers,
-            )
-
-        return self._session
+        self._session = session or ClientSession(
+            headers=headers,
+            timeout=timeout or ClientTimeout(total=0),
+        )
 
     async def close(self) -> None:
         """Этот метод используется для закрытия текущей сессии, если она открыта."""
         if self._session and not self._session.closed:
             await self._session.close()
-
-            await asyncio.sleep(0.25)
+            await asyncio.sleep(0)
 
     async def do_request(self, request: HttpRequest) -> Any:
         """
@@ -91,14 +67,13 @@ class AiohttpClient(BaseClient):
                     value=file.contents,
                 )
         try:
-            session = await self.get_session()
-            async with session.request(
+            async with self._session.request(
                 url=urllib.parse.urljoin(self.base_url, request.url),
                 method=request.method,
                 json=json,
                 data=data,
                 params=request.query_params,
-                timeout=self.timeout,
+                headers=request.headers,
             ) as response:
                 await response.read()
                 return response

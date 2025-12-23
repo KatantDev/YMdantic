@@ -3,7 +3,7 @@ import secrets
 
 import pytest
 from ymdantic import YMClient
-from ymdantic.exceptions.custom_exceptions import YMTrackNotFoundError
+from ymdantic.exceptions import YMTrackNotFoundError
 from ymdantic.models import Podcast, Track, UnavailablePodcast, UnavailableTrack
 
 

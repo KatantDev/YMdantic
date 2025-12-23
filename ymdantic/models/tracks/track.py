@@ -185,6 +185,7 @@ class Track(BaseTrack):
     # Доступные опции для трека.
     chart: ChartPosition | None = None
     # Информация о чарте, если трек входит в чарт.
+    special_audio_resources: Annotated[list[str], Field(default_factory=list)]
 
     async def get_download_info(self) -> list[DownloadInfo]:
         """
