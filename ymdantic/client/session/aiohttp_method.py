@@ -1,19 +1,22 @@
 from json import JSONDecodeError
 from logging import getLogger
-from typing import Any, Dict
+from typing import Any
 
-from aiohttp import ClientResponse, ClientError
+from aiohttp import ClientError, ClientResponse
 from dataclass_rest.exceptions import ClientLibraryError, MalformedResponse
 from dataclass_rest.http.aiohttp import AiohttpMethod
 from dataclass_rest.http_request import HttpRequest
 
-from ymdantic.exceptions import YandexMusicError
+from ymdantic.exceptions import YMError
+from ymdantic.exceptions.custom_exceptions import YMTrackNotFoundError
 from ymdantic.models.error import YandexMusicErrorModel
 
 logger = getLogger(__name__)
 
+ERROR_STATUS_CODES = range(400, 600)
 
-def exclude_none(params: Dict[str, Any]) -> Dict[str, Any]:
+
+def exclude_none(params: dict[str, Any]) -> dict[str, Any]:
     """
     Удаление элементов из словаря в которых значение равно None.
 
@@ -24,6 +27,8 @@ def exclude_none(params: Dict[str, Any]) -> Dict[str, Any]:
 
 
 class YMHttpMethod(AiohttpMethod):
+    """Метод для преобразования запроса и ответа в нужный вид."""
+
     async def _pre_process_request(self, request: HttpRequest) -> HttpRequest:
         """
         Этот метод используется для предварительной обработки запроса.
@@ -71,23 +76,23 @@ class YMHttpMethod(AiohttpMethod):
         except (ValueError, TypeError, AttributeError) as e:
             raise MalformedResponse from e
 
-    async def _on_error_default(self, response: ClientResponse) -> None:
+    async def _on_error_default(self, response: ClientResponse) -> Any:
         """
         Этот метод вызывается при получении ответа с кодом ошибки от 400 до 500.
 
         Он пытается извлечь информацию об ошибке из ответа и вызывает исключение
-        YandexMusicError с этой информацией.
+        YMError с этой информацией.
 
         :param response: Объект ClientResponse, содержащий ответ от сервера.
-        :raises YandexMusicError: Если статус ответа от 400 до 500.
+        :raises YMError: Если статус ответа от 400 до 500.
         """
         response_json = await response.json()
-        if 400 <= response.status <= 500:
-            if "error" in response_json:
-                response_json = response_json["error"]
-            raise YandexMusicError(
-                error=YandexMusicErrorModel.model_validate(
-                    response_json,
+        if response.status in ERROR_STATUS_CODES:
+            result = response_json.get("result", {})
+            raise YMError(
+                error=YandexMusicErrorModel(
+                    name=result.get("name", "unknown-error"),
+                    message=result.get("message") or str(response_json),
                 ),
             )
 
@@ -97,11 +102,11 @@ class YMHttpMethod(AiohttpMethod):
 
         Он пытается извлечь JSON из ответа и обрабатывает его в зависимости от
         содержимого.
-        Если в ответе есть ошибка "not-found", вызывается исключение YandexMusicError.
+        Если в ответе есть ошибка "not-found", вызывается исключение YMError.
         Если результатов много, то возвращается список результатов без ошибок.
 
         :param response: Объект ClientResponse, содержащий ответ от сервера.
-        :raises YandexMusicError: Если в ответе есть ошибка "not-found".
+        :raises YMError: Если в ответе есть ошибка "not-found".
         :raises ClientLibraryError: Если происходит ошибка при обработке ответа.
         :raises MalformedResponse: Если ответ не может быть преобразован в JSON.
         :return: Обработанный JSON ответа.
@@ -114,7 +119,7 @@ class YMHttpMethod(AiohttpMethod):
                 isinstance(response_json["result"], dict)
                 and response_json["result"].get("error") == "not-found"
             ):
-                raise YandexMusicError(
+                raise YMError(
                     error=YandexMusicErrorModel(name="not-found", message=""),
                 )
             if isinstance(response_json["result"], list):
@@ -124,9 +129,7 @@ class YMHttpMethod(AiohttpMethod):
                     if result.get("error") != "not-found"
                 ]
             if not response_json["result"]:
-                raise YandexMusicError(
-                    error=YandexMusicErrorModel(name="not-found", message=""),
-                )
+                raise YMTrackNotFoundError
             return response_json
         except ClientError as e:
             raise ClientLibraryError from e

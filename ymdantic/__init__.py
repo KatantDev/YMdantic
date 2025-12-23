@@ -1,3 +1,3 @@
-from .client import YMClient
+from ymdantic.client import YMClient
 
 __all__ = ("YMClient",)

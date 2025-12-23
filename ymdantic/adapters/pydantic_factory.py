@@ -1,19 +1,40 @@
-from pydantic import TypeAdapter
-from typing import Any, Dict
+from typing import Any, Optional, Type, TypeVar
 
-from ymdantic.models.base import YMBaseModel
+from pydantic import TypeAdapter
+
+TypeT = TypeVar("TypeT")
 
 
 class PydanticFactory:
+    """Фабрика для преобразования данных в pydantic модели."""
+
     @staticmethod
-    def load(data: Dict[str, Any], type_: Any) -> Any:
+    def load(data: Any, type_: Type[TypeT]) -> TypeT:
+        """
+        Преобразование данных в pydantic модель.
+
+        :param data: Данные для преобразования.
+        :param type_: Тип модели.
+        :return: Преобразованные данные.
+        """
         client = data.pop("__client")
-        model: YMBaseModel = TypeAdapter(type_).validate_python(
+        return TypeAdapter(type_).validate_python(
             data,
             context={"client": client},
         )
-        return model
 
     @staticmethod
-    def dump(data: Dict[str, Any], type_: Any) -> Any:
-        return TypeAdapter(type_).dump_python(data)
+    def dump(
+        data: TypeT,
+        class_: Optional[Type[TypeT]] = None,
+    ) -> Any:
+        """
+        Преобразование данных в pydantic модель.
+
+        :param data: Данные для преобразования.
+        :param class_: Тип модели.
+        :return: Преобразованные данные.
+        """
+        if class_ is None:
+            return None
+        return TypeAdapter(class_).dump_python(data)

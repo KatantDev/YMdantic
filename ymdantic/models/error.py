@@ -6,5 +6,5 @@ class YandexMusicErrorModel(BaseModel):
 
     name: str
     # Название ошибки.
-    message: str
+    message: str | None = None
     # Сообщение об ошибке.

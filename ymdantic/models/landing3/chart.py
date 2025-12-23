@@ -1,11 +1,11 @@
 from typing import List
+
 from pydantic import HttpUrl
 
 from ymdantic.models.playlists.cover import PlaylistCover
+from ymdantic.models.playlists.playlist import BasePlaylist, ShortPlaylist
 from ymdantic.models.playlists.tag import Tag
 from ymdantic.models.playlists.track import BasePlaylistTrack
-from ymdantic.models.playlists.playlist import BasePlaylist
-from ymdantic.models.playlists.playlist import ShortPlaylist
 
 
 class ChartTrack(BasePlaylistTrack):

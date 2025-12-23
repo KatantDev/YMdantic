@@ -1,3 +1,3 @@
-from .block import OldChartBlock, NewReleasesBlock
+from ymdantic.models.landing3.block import NewReleasesBlock, OldChartBlock
 
-__all__ = ("OldChartBlock", "NewReleasesBlock")
+__all__ = ("NewReleasesBlock", "OldChartBlock")

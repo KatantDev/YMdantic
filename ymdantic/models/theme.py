@@ -14,4 +14,10 @@ class Theme(YMBaseModel):
     # Ссылка на изображение фона.
 
     def get_bg_image_url(self, size: str = "200x200") -> HttpUrl:
+        """
+        Возвращает URL изображения фона с заданным размером.
+
+        :param size: Размер изображения.
+        :return: URL изображения фона с заданным размером.
+        """
         return HttpUrl(str(self.bg_image_url).replace("%%", size))

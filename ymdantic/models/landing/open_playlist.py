@@ -2,12 +2,14 @@ from typing import List
 
 from pydantic import HttpUrl
 
-from ymdantic.models.tracks import TrackType
 from ymdantic.models.base import YMBaseModel
 from ymdantic.models.landing.playlist import LandingPlaylist
+from ymdantic.models.tracks import TrackType
 
 
 class LandingOpenPlaylistCover(YMBaseModel):
+    """Модель информации об обложке плейлиста на лендинге."""
+
     uri: str
     # Ссылка на изображение обложки.
 
@@ -26,7 +28,7 @@ class LandingOpenPlaylistCover(YMBaseModel):
 
 
 class LandingOpenPlaylist(YMBaseModel):
-    """Pydantic модель, представляющая информацию о LandingOpenPlaylist."""
+    """Модель информации о плейлисте на лендинге."""
 
     playlist: LandingPlaylist
     # Информация о плейлисте.

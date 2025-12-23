@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Literal, List, Optional
+from typing import List, Literal, Optional
 
 from pydantic import HttpUrl, field_validator
 
@@ -7,10 +7,10 @@ from ymdantic.models.action_button import ActionButton
 from ymdantic.models.base import YMBaseModel
 from ymdantic.models.custom_wave import CustomWave
 from ymdantic.models.pager import Pager
-from ymdantic.models.playlists.owner import PlaylistOwner
 from ymdantic.models.playlists.cover import PlaylistCover
-from ymdantic.models.playlists.track import PlaylistTrack
+from ymdantic.models.playlists.owner import PlaylistOwner
 from ymdantic.models.playlists.tag import Tag
+from ymdantic.models.playlists.track import PlaylistTrack
 
 
 class BasePlaylist(YMBaseModel):
@@ -108,6 +108,12 @@ class ShortPlaylist(BasePlaylist):
     @field_validator("background_color", mode="before")
     @classmethod
     def validate_background_color(cls, v: Optional[str] = None) -> Optional[str]:
+        """
+        Валидатор цвета фона плейлиста.
+
+        :param v: Цвет фона плейлиста.
+        :return: Цвет фона плейлиста.
+        """
         if not v:
             return None
         return v

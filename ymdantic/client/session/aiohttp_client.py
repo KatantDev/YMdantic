@@ -1,11 +1,11 @@
 import asyncio
 import ssl
 import urllib.parse
-from contextlib import asynccontextmanager
-from typing import Optional, Any, Type, Dict, AsyncIterator
+from types import TracebackType
+from typing import Any, Optional, Self, Type
 
 import certifi
-from aiohttp import ClientSession, FormData, ClientError, ClientTimeout, TCPConnector
+from aiohttp import ClientError, ClientSession, ClientTimeout, FormData, TCPConnector
 from dataclass_rest.base_client import BaseClient
 from dataclass_rest.exceptions import ClientLibraryError
 from dataclass_rest.http_request import HttpRequest
@@ -14,14 +14,16 @@ from ymdantic.client.session.aiohttp_method import YMHttpMethod
 
 
 class AiohttpClient(BaseClient):
+    """Базовый клиент для работы с API Яндекс Музыки."""
+
     method_class = YMHttpMethod
 
     def __init__(
         self,
         base_url: str,
-        headers: Optional[Dict[str, Any]] = None,
+        headers: Optional[dict[str, Any]] = None,
         timeout: Optional[ClientTimeout] = None,
-    ):
+    ) -> None:
         super().__init__()
         self.base_url = base_url
         self.headers = headers or {}
@@ -29,23 +31,11 @@ class AiohttpClient(BaseClient):
 
         self._session: Optional[ClientSession] = None
         self._connector_type: Type[TCPConnector] = TCPConnector
-        self._connector_init: Dict[str, Any] = {
+        self._connector_init: dict[str, Any] = {
             "ssl": ssl.create_default_context(cafile=certifi.where()),
+            "limit": 100,
+            "ttl_dns_cache": 3600,
         }
-
-    @asynccontextmanager
-    async def context(self, auto_close: bool = True) -> AsyncIterator["AiohttpClient"]:
-        """
-        Контекстный менеджер для работы с клиентом
-
-        :param auto_close: Автоматически закрывать сессию после выполнения.
-        :yields: клиент
-        """
-        try:
-            yield self
-        finally:
-            if auto_close and self._session and not self._session.closed:
-                await self._session.close()
 
     async def get_session(self) -> ClientSession:
         """
@@ -115,15 +105,15 @@ class AiohttpClient(BaseClient):
         except ClientError as e:
             raise ClientLibraryError from e
 
-    def __del__(self) -> None:
-        """
-        Этот метод вызывается при удалении объекта класса AiohttpClient.
+    async def __aenter__(self) -> Self:
+        """Вход в асинхронный контекстный менеджер."""
+        return self
 
-        Если сессия существует и открыта, и если у сессии есть коннектор и она
-        является владельцем коннектора, то коннектор сессии закрывается и
-        устанавливается в None.
-        """
-        if self._session and not self._session.closed:
-            if self._session.connector is not None and self._session.connector_owner:
-                self._session.connector.close()
-            self._session._connector = None
+    async def __aexit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        exc_tb: TracebackType | None,
+    ) -> None:
+        """Выход из асинхронного контекстного менеджера."""
+        await self.close()

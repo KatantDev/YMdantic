@@ -1,4 +1,4 @@
-from typing import Literal, TypeVar, List
+from typing import List, Literal, TypeVar
 
 from ymdantic.models.base import YMBaseModel
 from ymdantic.models.landing3.chart import OldChart

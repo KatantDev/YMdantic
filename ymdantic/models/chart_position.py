@@ -1,4 +1,4 @@
-from typing import Literal, Optional
+from typing import Literal
 
 from ymdantic.models.base import YMBaseModel
 
@@ -14,5 +14,5 @@ class ChartPosition(YMBaseModel):
     # Количество слушателей трека на прошлой неделе.
     shift: int
     # Количество позиций, на которое изменилась позиция трека за последнее время.
-    bg_color: Optional[str] = None
+    bg_color: str | None = None
     # Цвет фона позиции трека.

@@ -1,4 +1,4 @@
-from typing import Literal, Union, List
+from typing import List, Literal, Union
 
 from pydantic import HttpUrl
 

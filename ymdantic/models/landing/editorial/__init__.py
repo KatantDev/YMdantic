@@ -1,4 +1,7 @@
-from .new_releases import NewReleasesResponse, NewRelease
-from .response import EditorialResponse
+from ymdantic.models.landing.editorial.new_releases import (
+    NewRelease,
+    NewReleasesResponse,
+)
+from ymdantic.models.landing.editorial.response import EditorialResponse
 
-__all__ = ("NewReleasesResponse", "NewRelease", "EditorialResponse")
+__all__ = ("EditorialResponse", "NewRelease", "NewReleasesResponse")

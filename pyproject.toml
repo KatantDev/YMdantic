@@ -1,51 +1,34 @@
-[tool.poetry]
+[project]
 name = "ymdantic"
 version = "0.1.8"
 description = "Фреймворк предоставляющий доступ к API Яндекс Музыки (с Pydantic валидацией)"
-authors = ["KatantDev <vlad26@mail.ru>"]
+authors = [{ name = "KatantDev", email = "vlad26@mail.ru" }]
+requires-python = ">=3.10,<3.14"
 readme = "README.md"
+dependencies = [
+    "aiohttp>=3.9.0,<4",
+    "pydantic>=2.4,<3",
+    "certifi>=2025,<2026",
+    "strenum>=0.4.15,<0.5",
+    "dataclass-rest>=0.5.0",
+]
 
-[tool.poetry.dependencies]
-python = "^3.8"
-aiohttp = "^3.9.0"
-pydantic = "^2.4"
-dataclass-rest = "^0.4"
-certifi = "^2023.7.22"
-strenum = "^0.4.15"
+[dependency-groups]
+dev = [
+    "mypy>=1.19,<2",
+    "ruff>=0.14,<1",
+    "pre-commit>=4,<5",
+    "pytest>=9.0.2",
+    "anyio>=4.12.0",
+    "pytest-cov>=7.0.0",
+]
 
-
-[tool.poetry.group.dev.dependencies]
-black = "^23"
-mypy = "^1.8"
-ruff = "^0.1"
-pre-commit = "^3"
-
-[tool.black]
-target-version = ['py38', 'py39', 'py310', 'py311', 'py312']
-exclude = '''
-(
-    \.eggs
-  | \.git
-  | build
-  | dist
-  | venv
-)
-'''
-
-[tool.isort]
-profile = "black"
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [tool.ruff]
 line-length = 88
-select = [
-    "C4",
-    "E",
-    "F",
-    "T10",
-    "T20",
-    "Q",
-    "RET",
-]
 src = ["ymdantic"]
 exclude = [
     ".git",
@@ -56,50 +39,76 @@ exclude = [
     "scripts",
     "*.egg-info",
 ]
-target-version = "py38"
+target-version = "py310"
 
-[tool.ruff.isort]
-known-first-party = [
-    "ymdantic",
+[tool.ruff.lint]
+select = [
+    "E", # Error
+    "F", # Pyflakes
+    "W", # Pycodestyle
+    "C90", # McCabe complexity
+    "I", # Isort
+    "N", # pep8-naming
+    "D", # Pydocstyle
+    "ANN", # Pytype annotations
+    "S", # Bandit
+    "B", # Bugbear
+    "COM", # Commas
+    "C4", # Comprehensions
+    "ISC", # Implicit string concat
+    "PIE", # Unnecessary code
+    "T20", # Catch prints
+    "PYI", # validate pyi files
+    "Q", # Checks for quotes
+    "RSE", # Checks raise statements
+    "RET", # Checks return statements
+    "SLF", # Self checks
+    "SIM", # Simplificator
+    "PTH", # Pathlib checks
+    "ERA", # Checks for commented out code
+    "PL", # PyLint checks
+    "RUF", # Specific to Ruff checks
+]
+ignore = [
+    "RUF001",
+    "RUF002",
+    "RUF003",
+    "D105", # Missing docstring in magic method
+    "D107", # Missing docstring in __init__
+    "D104", # Missing docstring in public package
+    "D100", # Missing docstring in public module
+    "ANN401", # typing.Any are disallowed in `**kwargs
+    "D203",
+    "D212",
 ]
 
-[tool.ruff.per-file-ignores]
-    "examples/*" = ["T201"]
+[tool.ruff.lint.per-file-ignores]
+"examples/*" = ["T201"]
+"ymdantic/client/yandex_music.py" = ["D102"]
+"tests/*" = ["S101","D103"]
 
 [tool.mypy]
 plugins = [
     "pydantic.mypy"
 ]
-follow_imports = "silent"
+python_version = "3.11"
+strict = true
+ignore_missing_imports = true
 allow_subclassing_any = true
-allow_untyped_decorators = true
-show_error_codes = true
-show_error_context = true
+allow_untyped_calls = true
 pretty = true
-warn_unused_configs = true
-disallow_untyped_calls = true
-disallow_untyped_defs = true
-disallow_incomplete_defs = true
-check_untyped_defs = true
-no_implicit_optional = true
-warn_redundant_casts = true
-warn_unused_ignores = true
+show_error_codes = true
+implicit_reexport = true
+allow_untyped_decorators = true
+warn_unused_ignores = false
 warn_return_any = false
-follow_imports_for_stubs = true
 namespace_packages = true
-show_absolute_path = true
 
 [[tool.mypy.overrides]]
-module = [
-    'dataclass_rest.*'
-]
-ignore_missing_imports = true
+module = "ymdantic.client.yandex_music"
+disable_error_code = ["call-arg"]
 
 [tool.pydantic-mypy]
 init_forbid_extra = true
 init_typed = true
 warn_required_dynamic_aliases = true
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"

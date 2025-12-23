@@ -1,4 +1,4 @@
-from typing import Literal, Optional
+from typing import Literal
 
 from pydantic import HttpUrl
 
@@ -14,5 +14,5 @@ class CustomWave(YMBaseModel):
     # URL анимации пользовательской волны.
     header: str
     # Заголовок пользовательской волны.
-    position: Optional[Literal["default"]] = None
+    position: Literal["default"] | None = None
     # Позиция пользовательской волны.

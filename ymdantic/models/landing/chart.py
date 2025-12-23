@@ -1,5 +1,3 @@
-from typing import List
-
 from pydantic import HttpUrl
 
 from ymdantic.models.landing3.chart import ChartTrack
@@ -19,7 +17,7 @@ class Chart(BasePlaylist):
     # URL фонового изображения чарта.
     background_video_url: HttpUrl
     # URL фонового видео чарта.
-    tracks: List[ChartTrack]
+    tracks: list[ChartTrack]
     # Список треков в чарте.
 
     def get_background_image_url(self, size: str = "200x200") -> HttpUrl:

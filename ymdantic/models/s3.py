@@ -29,7 +29,8 @@ class S3FileUrl(BaseModel):
 
         :return: Хеш MD5 конкатенированной строки в виде шестнадцатеричной строки.
         """
-        return md5((PRIVATE_KEY + self.path[1::] + self.s).encode("utf-8")).hexdigest()
+        data = (PRIVATE_KEY + self.path[1::] + self.s).encode("utf-8")
+        return md5(data, usedforsecurity=False).hexdigest()
 
     @property
     def url(self) -> HttpUrl:
