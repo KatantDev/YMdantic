@@ -1,8 +1,8 @@
 import asyncio
 import secrets
+from typing import Type, TypedDict
 
 import pytest
-from typing_extensions import Type, TypedDict
 from ymdantic import YMClient
 from ymdantic.exceptions.custom_exceptions import YMTrackNotFoundError
 from ymdantic.models import Podcast, Track, UnavailablePodcast, UnavailableTrack
