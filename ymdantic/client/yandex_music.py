@@ -46,6 +46,7 @@ from ymdantic.models import (
 )
 from ymdantic.models.account import AccountSettings, SetAccountSettingsParams
 from ymdantic.models.landing.artist import LandingArtistItemData
+from ymdantic.models.tracks.file_info import FileInfo, FileInfoParams, FileInfoWrapped
 
 
 class YMClient(AiohttpClient):
@@ -63,7 +64,7 @@ class YMClient(AiohttpClient):
             headers={
                 "Accept": "application/json",
                 "Authorization": f"OAuth {token}",
-                "X-Yandex-Music-Client": "YandexMusic/649",
+                "X-Yandex-Music-Client": "YandexMusicAndroid/24023621",
             },
         )
 
@@ -109,6 +110,12 @@ class YMClient(AiohttpClient):
         self,
         track_id: int | str,
     ) -> list[DownloadInfoDirect]:
+        """
+        Используется для получения прямых ссылок на скачивание трека.
+
+        :param track_id: ID трека.
+        :return: Список информации для скачивания трека + прямые ссылки.
+        """
         result = await self.get_track_download_info(track_id=track_id)
 
         new_response = []
@@ -137,6 +144,25 @@ class YMClient(AiohttpClient):
         url: HttpUrl,
         format: str = "json",
     ) -> S3FileUrl:
+        raise NotImplementedError
+
+    async def get_track_file_info(self, track_id: int | str) -> FileInfo:
+        """
+        Используется для получения lossless файлов.
+
+        :param track_id: ID трека.
+        :return: Информация о файле.
+        """
+        response = await self.get_track_file_info_request(
+            params=FileInfoParams(track_id=track_id),
+        )
+        return response.result.download_info
+
+    @get("get-file-info")
+    async def get_track_file_info_request(
+        self,
+        params: FileInfoParams,
+    ) -> Response[FileInfoWrapped]:
         raise NotImplementedError
 
     async def get_old_chart(self, limit: int | None = None) -> OldChartBlock:

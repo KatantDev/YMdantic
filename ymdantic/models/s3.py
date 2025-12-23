@@ -2,7 +2,7 @@ from hashlib import md5
 
 from pydantic import BaseModel, HttpUrl
 
-PRIVATE_KEY = "uz0zSpaYCLmgk6C7YLdo5F"
+PRIVATE_KEY = "p93jhgh689SBReK6ghtw62"
 
 
 class S3FileUrl(BaseModel):
