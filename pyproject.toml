@@ -92,6 +92,7 @@ plugins = [
     "pydantic.mypy"
 ]
 python_version = "3.11"
+strict = true
 ignore_missing_imports = true
 allow_subclassing_any = true
 allow_untyped_calls = true
@@ -102,6 +103,10 @@ allow_untyped_decorators = true
 warn_unused_ignores = false
 warn_return_any = false
 namespace_packages = true
+
+[[tool.mypy.overrides]]
+module = "ymdantic.client.yandex_music"
+disable_error_code = ["call-arg"]
 
 [tool.pydantic-mypy]
 init_forbid_extra = true

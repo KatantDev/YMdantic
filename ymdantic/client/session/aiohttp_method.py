@@ -76,7 +76,7 @@ class YMHttpMethod(AiohttpMethod):
         except (ValueError, TypeError, AttributeError) as e:
             raise MalformedResponse from e
 
-    async def _on_error_default(self, response: ClientResponse) -> None:
+    async def _on_error_default(self, response: ClientResponse) -> Any:
         """
         Этот метод вызывается при получении ответа с кодом ошибки от 400 до 500.
 
