@@ -148,7 +148,7 @@ class YMClient(AiohttpClient):
 
     async def get_track_file_info(self, track_id: int | str) -> FileInfo:
         """
-        Используется для получения lossless файлов.
+        Используется для получения lossless файлов, если доступен.
 
         :param track_id: ID трека.
         :return: Информация о файле.
