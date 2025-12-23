@@ -1,12 +1,15 @@
-name: Testing otlp_test
+name: Testing YMdantic
 
 on: push
 
 jobs:
   lint:
+    runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        include:
+        python-version: ["3.11", "3.12", "3.13", "3.14"]
+        check:
           - name: Ruff format
             cmd: ruff format --diff
           - name: Ruff check
@@ -15,21 +18,23 @@ jobs:
             cmd: mypy ymdantic tests
           - name: Pytest
             cmd: pytest -vv tests
-    runs-on: ubuntu-latest
+
+    name: "${{ matrix.check.name }} (py${{ matrix.python-version }})"
+
     steps:
       - uses: actions/checkout@v6
 
-      - name: Install the latest version of uv
+      - name: Install uv
         uses: astral-sh/setup-uv@v7
         with:
-          version: '0.9.17'
-          python-version: '3.13'
-          enable-cache: "auto"
+          version: "0.9.17"
+          python-version: ${{ matrix.python-version }}
+          enable-cache: true
 
       - name: Install deps
         run: uv sync --locked --all-groups
 
-      - name: Run lint check
+      - name: Run check
         env:
           YM_TOKEN: ${{ secrets.YM_TOKEN }}
-        run: uv run ${{ matrix.cmd }}
+        run: uv run ${{ matrix.check.cmd }}
