@@ -30,4 +30,6 @@ jobs:
         run: uv sync --locked --all-groups
 
       - name: Run lint check
+        env:
+          YM_TOKEN: ${{ secrets.YM_TOKEN }}
         run: uv run ${{ matrix.cmd }}

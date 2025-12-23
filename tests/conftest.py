@@ -4,7 +4,7 @@ from typing import Any, AsyncGenerator
 import pytest
 from ymdantic import YMClient
 
-TOKEN = os.environ["TOKEN"]
+TOKEN = os.environ["YM_TOKEN"]
 
 
 @pytest.fixture(scope="session")
