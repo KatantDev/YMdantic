@@ -1,4 +1,4 @@
-from typing import Annotated, Literal
+from typing import Annotated, Literal, NotRequired, TypedDict
 
 from pydantic import Field
 
@@ -22,6 +22,21 @@ class SearchParams(YMPostBaseModel):
         | None
     ) = None
     nocorrect: bool = False
+
+
+class SearchParamsDict(TypedDict, total=False):
+    """Fields for search function."""
+
+    text: str
+    with_likes_count: NotRequired[bool]
+    page: NotRequired[int]
+    page_size: NotRequired[int]
+    with_best_results: NotRequired[bool]
+    type: NotRequired[Literal["all"]]
+    filter: NotRequired[
+        Literal["track", "artist", "album", "playlist", "podcast", "book", "clip"]
+    ]
+    nocorrect: NotRequired[bool]
 
 
 class SearchFilter(YMBaseModel):

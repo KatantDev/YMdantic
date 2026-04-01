@@ -51,6 +51,7 @@ from ymdantic.models import (
 )
 from ymdantic.models.account import AccountSettings, SetAccountSettingsParams
 from ymdantic.models.landing.artist import LandingArtistItemData
+from ymdantic.models.search.base import SearchParamsDict
 
 
 class YMClient(AiohttpClient):
@@ -441,7 +442,7 @@ class YMClient(AiohttpClient):
 
     async def search_instant_mixed(
         self,
-        **params: Unpack[SearchParams],  # type: ignore[misc]
+        **params: Unpack[SearchParamsDict],
     ) -> SearchInstantMixedResponse:
         response = await self.search_instant_mixed_request(
             params=SearchParams(**params),
