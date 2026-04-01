@@ -1,10 +1,9 @@
 from datetime import datetime
-from typing import Annotated, Any, Optional
-
-from pydantic import Field
+from typing import Optional
 
 from ymdantic.models.base import YMBaseModel
 from ymdantic.models.chart_position import ChartPosition
+from ymdantic.models.content_restrictions import ContentRestrictions
 from ymdantic.models.tracks import TrackType
 
 
@@ -21,7 +20,7 @@ class BasePlaylistTrack(YMBaseModel):
     # Флаг, указывающий, является ли трек недавно добавленным в плейлист.
     chart: Optional[ChartPosition] = None
     # Позиция трека в чарте, если он в нём находится.
-    content_restrictions: Annotated[dict[str, Any], Field(default_factory=dict)]
+    content_restrictions: ContentRestrictions | None = None
 
 
 class PlaylistTrack(BasePlaylistTrack):

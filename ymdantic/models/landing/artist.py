@@ -3,6 +3,7 @@ from typing import Literal
 from pydantic import HttpUrl
 
 from ymdantic.models.base import YMBaseModel
+from ymdantic.models.content_restrictions import ContentRestrictions
 from ymdantic.models.landing.cover import LandingCover
 
 
@@ -15,6 +16,10 @@ class LandingArtist(YMBaseModel):
     # Имя артиста.
     cover: LandingCover
     # Обложка артиста. Содержит информацию о цветах обложки и URI обложки.
+    various: bool
+    # Флаг, указывающий, является ли артист сборным.
+    content_restrictions: ContentRestrictions | None = None
+    # Ограничения по содержанию.
 
     def get_cover_image_url(self, size: str = "200x200") -> HttpUrl:
         """

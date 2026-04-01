@@ -165,6 +165,8 @@ class ShortAlbum(BaseAlbum):
     # Идентификатор мета-тега альбома.
     start_date: date | None = None
     # Дата начала альбома.
+    listening_finished: bool | None = None
+    # Флаг, указывающий, завершено ли прослушивание альбома.
 
 
 class Album(ShortAlbum):

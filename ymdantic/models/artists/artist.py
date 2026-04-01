@@ -6,7 +6,8 @@ from ymdantic.models.artists.extra_action import ExtraAction
 from ymdantic.models.artists.ratings import Ratings
 from ymdantic.models.artists.social_link import SocialLink
 from ymdantic.models.base import YMBaseModel
-from ymdantic.models.cover import Cover
+from ymdantic.models.cover import Cover, ShortCover
+from ymdantic.models.derived_colors import DerivedColors
 
 
 class ShortArtist(YMBaseModel, DeprecatedMixin):
@@ -28,6 +29,9 @@ class ShortArtist(YMBaseModel, DeprecatedMixin):
     # Список отказов от ответственности артиста.
     cover: Cover | None = None
     # Обложка артиста.
+    derived_colors: DerivedColors | None = None
+    # Дополнительные цвета обложки артиста.
+    cutout_cover: ShortCover | None = None
 
     def get_cover_image_url(self, size: str = "200x200") -> HttpUrl | None:
         """
@@ -64,6 +68,7 @@ class Artist(SimilarArtist):
     db_aliases: list[str]
     # Список псевдонимов артиста в базе данных (для поиска).
     extra_actions: list[ExtraAction]
+    # Список дополнительных действий, связанных с артистом.
 
     def get_og_image_url(self, size: str = "200x200") -> HttpUrl:
         """

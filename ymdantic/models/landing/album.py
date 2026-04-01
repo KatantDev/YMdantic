@@ -1,10 +1,12 @@
-from typing import List, Literal, Optional
+from typing import Literal
 
 from pydantic import HttpUrl
 
 from ymdantic.models.base import YMBaseModel
+from ymdantic.models.content_restrictions import ContentRestrictions
 from ymdantic.models.landing.artist import LandingArtist
 from ymdantic.models.landing.cover import LandingCover
+from ymdantic.models.trailer import Trailer
 
 
 class LandingAlbum(YMBaseModel):
@@ -16,10 +18,12 @@ class LandingAlbum(YMBaseModel):
     # Название альбома.
     cover: LandingCover
     # Обложка альбома. Содержит информацию о цветах для обложки и URI обложки.
-    album_type: Optional[Literal["single", "compilation"]] = None
+    album_type: Literal["single", "compilation"] | None = None
     # Тип альбома.
-    content_warning: Optional[Literal["explicit", "clean"]] = None
+    content_warning: Literal["explicit", "clean"] | None = None
     # Предупреждение о содержании.
+    content_restrictions: ContentRestrictions | None = None
+    # Ограничения по содержанию.
 
     def get_cover_image_url(self, size: str = "200x200") -> HttpUrl:
         """
@@ -35,7 +39,8 @@ class LandingAlbumItemData(YMBaseModel):
     """Pydantic модель, представляющая информацию об альбоме на главной."""
 
     album: LandingAlbum
-    artists: List[LandingArtist]
+    artists: list[LandingArtist]
+    trailer: Trailer
 
 
 class LandingAlbumItem(YMBaseModel):

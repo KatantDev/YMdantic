@@ -1,7 +1,7 @@
 from datetime import datetime
-from typing import List, Literal, Optional
+from typing import Annotated, Literal
 
-from pydantic import HttpUrl, field_validator
+from pydantic import Field, HttpUrl, field_validator
 
 from ymdantic.models.action_button import ActionButton
 from ymdantic.models.base import YMBaseModel
@@ -16,22 +16,50 @@ from ymdantic.models.playlists.track import PlaylistTrack
 class BasePlaylist(YMBaseModel):
     """Pydantic модель, представляющая базовую информацию о плейлисте."""
 
+    uid: int
+    # Уникальный идентификатор пользователя.
+    kind: int
+    # Вид плейлиста. Известно, что при значении 3 - понравившиеся треки.
+    title: str
+    # Название плейлиста.
+    playlist_uuid: str | None = None
+    # UUID плейлиста.
+    description: str | None = None
+    # Описание плейлиста.
+    description_formatted: str | None = None
+    # Отформатированное описание плейлиста.
+    cover: PlaylistCover | None = None
+    # Обложка плейлиста.
+    track_count: int
+    # Количество треков в плейлисте.
+    likes_count: int | None = None
+    # Количество лайков плейлиста.
+    artist_playlist_type: str | None = None
+    # Тип плейлиста артиста.
+
+    def get_cover_image_url(self, size: str = "200x200") -> HttpUrl | None:
+        """
+        Возвращает URL изображения обложки плейлиста с заданным размером.
+
+        :param size: Размер изображения.
+        :return: URL изображения обложки плейлиста с заданным размером.
+        """
+        if self.cover is None:
+            return None
+        return self.cover.get_image_url(size)
+
+
+class ShortPlaylist(BasePlaylist):
+    """Pydantic модель, представляющая базовую информацию о плейлисте."""
+
     owner: PlaylistOwner
     # Владелец плейлиста.
     available: bool
     # Доступность плейлиста.
-    uid: int
-    # Уникальный идентификатор пользователя.
-    kind: int  # TODO: Проверить, что тут может быть.
-    # Вид плейлиста. Известно, что при значении 3 - понравившиеся треки.
-    title: str
-    # Название плейлиста.
     revision: int
     # Ревизия плейлиста.
     snapshot: int
     # Снимок плейлиста.
-    track_count: int
-    # Количество треков в плейлисте.
     visibility: Literal["public"]
     # Видимость плейлиста.
     collective: bool
@@ -48,66 +76,34 @@ class BasePlaylist(YMBaseModel):
     # Длительность плейлиста в миллисекундах.
     og_image: str
     # OG-изображение плейлиста. Может быть преобразовано в URL.
-    playlist_uuid: Optional[str] = None
-    # UUID плейлиста.
-
-    def get_og_image_url(self, size: str = "200x200") -> HttpUrl:
-        """
-        Возвращает URL OG-изображения плейлиста.
-
-        :return: URL OG-изображения плейлиста.
-        """
-        return HttpUrl(f"https://{self.og_image.replace('%%', size)}")
-
-
-class ShortPlaylist(BasePlaylist):
-    """Pydantic модель, представляющая краткую информацию о плейлисте."""
-
-    cover: PlaylistCover
-    # Обложка плейлиста.
-    tags: List[Tag]
+    tags: Annotated[list[Tag], Field(default_factory=list)]
     # Теги плейлиста.
-    id_for_from: Optional[str] = None
+    id_for_from: str | None = None
     # Идентификатор для источника плейлиста.
-    og_title: Optional[str] = None
+    og_title: str | None = None
     # OG-заголовок плейлиста.
-    description: Optional[str] = None
-    # Описание плейлиста.
-    description_formatted: Optional[str] = None
-    # Отформатированное описание плейлиста.
-    custom_wave: Optional[CustomWave] = None
+    custom_wave: CustomWave | None = None
     # Пользовательская волна плейлиста.
-    last_owner_playlists: Optional[List["ShortPlaylist"]] = None
+    last_owner_playlists: Annotated[list["ShortPlaylist"], Field(default_factory=list)]
     # Последние плейлисты владельца.
-    likes_count: Optional[int] = None
-    # Количество лайков плейлиста.
-    background_image_url: Optional[str] = None
+    background_image_url: str | None = None
     # URL фонового изображения плейлиста.
-    background_video_url: Optional[HttpUrl] = None
+    background_video_url: HttpUrl | None = None
     # URL фонового видео плейлиста.
-    image: Optional[Literal[""]] = None
+    image: str | None = None
     # Изображение плейлиста.
-    text_color: Optional[str] = None
+    text_color: str | None = None
     # Цвет текста плейлиста.
-    action_button: Optional[ActionButton] = None
+    action_button: ActionButton | None = None
     # Кнопка действия плейлиста.
-    background_color: Optional[str] = None
+    background_color: str | None = None
     # Цвет фона плейлиста.
-    child_content: Optional[bool] = None
+    child_content: bool | None = None
     # Содержит ли плейлист детский контент.
-
-    def get_cover_image_url(self, size: str = "200x200") -> HttpUrl:
-        """
-        Возвращает URL изображения обложки плейлиста с заданным размером.
-
-        :param size: Размер изображения.
-        :return: URL изображения обложки плейлиста с заданным размером.
-        """
-        return self.cover.get_image_url(size)
 
     @field_validator("background_color", mode="before")
     @classmethod
-    def validate_background_color(cls, v: Optional[str] = None) -> Optional[str]:
+    def validate_background_color(cls, v: str | None = None) -> str | None:
         """
         Валидатор цвета фона плейлиста.
 
@@ -118,7 +114,7 @@ class ShortPlaylist(BasePlaylist):
             return None
         return v
 
-    def get_background_image_url(self, size: str = "200x200") -> Optional[HttpUrl]:
+    def get_background_image_url(self, size: str = "200x200") -> HttpUrl | None:
         """
         Возвращает URL изображения фона плейлиста с заданным размером.
 
@@ -129,13 +125,21 @@ class ShortPlaylist(BasePlaylist):
             return None
         return HttpUrl(f"https://{self.background_image_url.replace('%%', size)}")
 
+    def get_og_image_url(self, size: str = "200x200") -> HttpUrl:
+        """
+        Возвращает URL OG-изображения плейлиста.
+
+        :return: URL OG-изображения плейлиста.
+        """
+        return HttpUrl(f"https://{self.og_image.replace('%%', size)}")
+
 
 class Playlist(ShortPlaylist):
     """Pydantic модель, представляющая информацию о плейлисте с треками."""
 
-    tracks: List[PlaylistTrack]
+    tracks: list[PlaylistTrack]
     # Список треков в плейлисте.
-    similar_playlists: Optional[List[ShortPlaylist]] = None
+    similar_playlists: Annotated[list[ShortPlaylist], Field(default_factory=list)]
     # Список похожих плейлистов.
     pager: Pager
     # Объект пейджера, содержащий информацию о пагинации.

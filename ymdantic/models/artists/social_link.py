@@ -12,6 +12,6 @@ class SocialLink(YMBaseModel):
     # Имя артиста в социальной сети.
     href: HttpUrl
     # Ссылка на артиста в социальной сети.
-    type: Literal["social"]
-    # Тип ссылки. Возможные значения: "social".
-    social_network: str
+    type: Literal["social", "official"]
+    # Тип ссылки. Возможные значения: "social", "official".
+    social_network: str | None = None

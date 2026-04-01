@@ -16,3 +16,16 @@ class CustomWave(YMBaseModel):
     # Заголовок пользовательской волны.
     position: Literal["default"] | None = None
     # Позиция пользовательской волны.
+    background_image_url: str | None = None
+    # URL фонового изображения плейлиста.
+
+    def get_background_image_url(self, size: str = "200x200") -> HttpUrl | None:
+        """
+        Возвращает URL изображения фона плейлиста с заданным размером.
+
+        :param size: Размер изображения.
+        :return: URL изображения фона плейлиста с заданным размером.
+        """
+        if self.background_image_url is None:
+            return None
+        return HttpUrl(f"https://{self.background_image_url.replace('%%', size)}")

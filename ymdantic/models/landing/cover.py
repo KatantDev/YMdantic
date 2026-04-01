@@ -1,27 +1,7 @@
 from pydantic import HttpUrl
 
 from ymdantic.models.base import YMBaseModel
-from ymdantic.models.tracks import DerivedColors
-
-
-class LandingPlaylistCover(YMBaseModel):
-    """Pydantic модель, представляющая информацию об обложке плейлиста на лендинге."""
-
-    uri: str  # TODO: get_url
-    # URI обложки плейлиста.
-    color: str | None = None
-    # Основной цвет обложки плейлиста.
-    derived_colors: DerivedColors | None = None
-    # Дополнительные цвета обложки плейлиста.
-
-    def get_image_url(self, size: str = "200x200") -> HttpUrl:
-        """
-        Возвращает ссылку на изображение обложки.
-
-        :param size: Размер изображения.
-        :return: Ссылка на изображение обложки.
-        """
-        return HttpUrl(f"https://{self.uri.replace('%%', size)}")
+from ymdantic.models.derived_colors import DerivedColors
 
 
 class LandingCover(YMBaseModel):

@@ -3,7 +3,7 @@ from typing import Literal
 from pydantic import HttpUrl
 
 from ymdantic.models.base import YMBaseModel
-from ymdantic.models.landing.cover import LandingPlaylistCover
+from ymdantic.models.cover import ShortCover
 
 
 class LandingPlaylist(YMBaseModel):
@@ -17,7 +17,7 @@ class LandingPlaylist(YMBaseModel):
     # Тип плейлиста.
     title: str
     # Название плейлиста.
-    cover: LandingPlaylistCover
+    cover: ShortCover
     # Обложка плейлиста. Содержит информацию о цветах обложки и URI обложки.
 
     def get_cover_image_url(self, size: str = "200x200") -> HttpUrl:

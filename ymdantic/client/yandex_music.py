@@ -15,6 +15,9 @@ from ymdantic.models import (
     DownloadInfo,
     DownloadInfoDirect,
     EditorialResponse,
+    FileInfo,
+    FileInfoParams,
+    FileInfoWrapped,
     InStyle,
     InStyleResponse,
     LandingAlbumItem,
@@ -40,13 +43,14 @@ from ymdantic.models import (
     Playlist,
     Response,
     S3FileUrl,
+    SearchInstantMixedResponse,
+    SearchParams,
     ShortAlbum,
     SkeletonResponse,
     TrackType,
 )
 from ymdantic.models.account import AccountSettings, SetAccountSettingsParams
 from ymdantic.models.landing.artist import LandingArtistItemData
-from ymdantic.models.tracks.file_info import FileInfo, FileInfoParams, FileInfoWrapped
 
 
 class YMClient(AiohttpClient):
@@ -433,4 +437,20 @@ class YMClient(AiohttpClient):
         self,
         params: SetAccountSettingsParams,
     ) -> Response[AccountSettings]:
+        raise NotImplementedError
+
+    async def search_instant_mixed(
+        self,
+        **params: Unpack[SearchParams],  # type: ignore[misc]
+    ) -> SearchInstantMixedResponse:
+        response = await self.search_instant_mixed_request(
+            params=SearchParams(**params),
+        )
+        return response.result
+
+    @get("search/instant/mixed")
+    async def search_instant_mixed_request(
+        self,
+        params: SearchParams,
+    ) -> Response[SearchInstantMixedResponse]:
         raise NotImplementedError

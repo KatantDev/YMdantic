@@ -34,9 +34,13 @@ from ymdantic.models.landing3 import NewReleasesBlock, OldChartBlock
 from ymdantic.models.playlists import Playlist
 from ymdantic.models.response import Response
 from ymdantic.models.s3 import S3FileUrl
+from ymdantic.models.search import SearchInstantMixedResponse, SearchParams
 from ymdantic.models.tracks import (
     DownloadInfo,
     DownloadInfoDirect,
+    FileInfo,
+    FileInfoParams,
+    FileInfoWrapped,
     Podcast,
     Track,
     TrackType,
@@ -58,6 +62,9 @@ __all__ = (
     "DownloadInfo",
     "DownloadInfoDirect",
     "EditorialResponse",
+    "FileInfo",
+    "FileInfoParams",
+    "FileInfoWrapped",
     "InStyle",
     "InStyleResponse",
     "LandingAlbum",
@@ -88,6 +95,8 @@ __all__ = (
     "Podcast",
     "Response",
     "S3FileUrl",
+    "SearchInstantMixedResponse",
+    "SearchParams",
     "ShortAlbum",
     "ShortArtist",
     "SkeletonResponse",

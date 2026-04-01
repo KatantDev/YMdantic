@@ -3,15 +3,15 @@ from datetime import datetime
 from pydantic import HttpUrl
 
 from ymdantic.models.base import YMBaseModel
+from ymdantic.models.cover import ShortCover
 from ymdantic.models.landing.album import LandingAlbum
 from ymdantic.models.landing.artist import LandingArtist
-from ymdantic.models.landing.cover import LandingPlaylistCover
 
 
 class NewRelease(YMBaseModel):
     """Pydantic модель, представляющая информацию о новых релизах."""
 
-    cover: LandingPlaylistCover
+    cover: ShortCover
     # Обложка плейлиста. Содержит информацию о цветах обложки и URI обложки.
     artists: list[LandingArtist]
     # Список артистов, участвующих в новых релизах.

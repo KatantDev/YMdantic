@@ -3,6 +3,27 @@ from typing import Literal
 from pydantic import HttpUrl
 
 from ymdantic.models.base import YMBaseModel
+from ymdantic.models.derived_colors import DerivedColors
+
+
+class ShortCover(YMBaseModel):
+    """Pydantic модель, представляющая информацию об обложке."""
+
+    uri: str
+    # URI обложки плейлиста.
+    color: str | None = None
+    # Основной цвет обложки плейлиста.
+    derived_colors: DerivedColors | None = None
+    # Дополнительные цвета обложки плейлиста.
+
+    def get_image_url(self, size: str = "200x200") -> HttpUrl:
+        """
+        Возвращает ссылку на изображение обложки.
+
+        :param size: Размер изображения.
+        :return: Ссылка на изображение обложки.
+        """
+        return HttpUrl(f"https://{self.uri.replace('%%', size)}")
 
 
 class Cover(YMBaseModel):

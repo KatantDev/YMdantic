@@ -8,8 +8,8 @@ from ymdantic.mixins import DeprecatedMixin
 from ymdantic.models.artists.artist import ShortArtist
 from ymdantic.models.base import YMBaseModel
 from ymdantic.models.chart_position import ChartPosition
+from ymdantic.models.derived_colors import DerivedColors
 from ymdantic.models.tracks.album import TrackAlbum
-from ymdantic.models.tracks.derived_colors import DerivedColors
 from ymdantic.models.tracks.download_info import DownloadInfo, DownloadInfoDirect
 from ymdantic.models.tracks.fade import Fade
 from ymdantic.models.tracks.lyrics_info import LyricsInfo
