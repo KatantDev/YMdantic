@@ -1,6 +1,6 @@
 [project]
 name = "ymdantic"
-version = "0.2.0"
+version = "0.2.1"
 description = "Фреймворк предоставляющий доступ к API Яндекс Музыки (с Pydantic валидацией)"
 authors = [{ name = "KatantDev", email = "vlad26@mail.ru" }]
 requires-python = ">=3.12,<3.15"
