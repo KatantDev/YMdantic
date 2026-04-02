@@ -4,6 +4,7 @@ on:
   push:
   pull_request:
   pull_request_target:
+    types: [opened, synchronize, reopened]
 
 jobs:
   lint:
@@ -39,8 +40,36 @@ jobs:
       - name: Run check
         run: uv run ${{ matrix.check.cmd }}
 
-  test:
-    if: github.event_name != 'pull_request'
+  test_push:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.12", "3.13", "3.14"]
+
+    name: "Pytest push (py${{ matrix.python-version }})"
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          version: "0.9.17"
+          python-version: ${{ matrix.python-version }}
+          enable-cache: true
+
+      - name: Install deps
+        run: uv sync --locked --all-groups
+
+      - name: Run Pytest
+        env:
+          YM_TOKEN: ${{ secrets.YM_TOKEN }}
+        run: uv run pytest -vv tests
+
+  test_pr_approved:
+    if: github.event_name == 'pull_request_target'
     runs-on: ubuntu-latest
     environment: pull_requests
     strategy:
@@ -48,12 +77,16 @@ jobs:
       matrix:
         python-version: ["3.12", "3.13", "3.14"]
 
-    name: "Pytest (py${{ matrix.python-version }})"
+    name: "Pytest PR approved (py${{ matrix.python-version }})"
+
+    permissions:
+      contents: read
+      pull-requests: read
 
     steps:
       - uses: actions/checkout@v6
         with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Install uv
         uses: astral-sh/setup-uv@v7
