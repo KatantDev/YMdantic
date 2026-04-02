@@ -1,4 +1,4 @@
-from typing import Sequence, Unpack, Optional
+from typing import Sequence, Unpack
 
 from dataclass_rest import get, post
 from dataclass_rest.client_protocol import FactoryProtocol
@@ -53,11 +53,6 @@ from ymdantic.models.account import AccountSettings, SetAccountSettingsParams
 from ymdantic.models.landing.artist import LandingArtistItemData
 
 
-from aiohttp import ClientSession, TCPConnector
-# Для поддержки SOCKS прокси
-from aiohttp_socks import ProxyConnector
-import ssl
-
 class YMClient(AiohttpClient):
     """Клиент для работы с API Яндекс Музыки."""
 
@@ -66,98 +61,21 @@ class YMClient(AiohttpClient):
         token: str,
         user_id: int | None = None,
         base_url: str = "https://api.music.yandex.net/",
-        proxy: str | None = None,
-        # Формат: scheme://login:password@ip:port
-        check_certs: bool = True,  # Проверка SSL сертификатов
+        proxy: str | None = None, # Формат: scheme://login:password@ip:port
     ) -> None:
         self.user_id = user_id
-        self.proxy = proxy
-        self.check_certs = check_certs
+
         headers = {
             "Accept": "application/json",
             "Authorization": f"OAuth {token}",
             "X-Yandex-Music-Client": "YandexMusicAndroid/24023621",
         }
-        session = self._create_session_with_proxy(headers=headers) if self.proxy else None
+
         super().__init__(
             base_url=base_url,
             headers=headers,
-            session=session
+            proxy=proxy
         )
-
-    def _create_session_with_proxy(self, headers: dict[str,str]) -> ClientSession:
-        """
-        Создает ClientSession с учетом прокси и настроек SSL.
-        Поддерживает HTTP, HTTPS и SOCKS прокси (4, 4a, 5).
-        """
-        # Настройка SSL контекста
-        if not self.check_certs:
-            ssl_context = ssl.create_default_context()
-            ssl_context.check_hostname = False
-            ssl_context.verify_mode = ssl.CERT_NONE
-        else:
-            ssl_context = None  # Используем стандартную проверку
-
-        # Определяем тип прокси по схеме
-        proxy_lower = self.proxy.lower()
-
-        # SOCKS прокси (поддерживаются socks4, socks4a, socks5, socks5h)
-        if any(scheme in proxy_lower for scheme in
-               ['socks4', 'socks5', 'socks5h', 'socks4a']):
-
-            # Определяем точный тип SOCKS
-            if 'socks5h' in proxy_lower:
-                proxy_type = 'socks5h'
-            elif 'socks5' in proxy_lower:
-                proxy_type = 'socks5'
-            elif 'socks4a' in proxy_lower:
-                proxy_type = 'socks4a'
-            elif 'socks4' in proxy_lower:
-                proxy_type = 'socks4'
-            else:
-                proxy_type = 'socks5'
-
-            # Используем ProxyConnector для SOCKS
-            connector = ProxyConnector.from_url(
-                self.proxy,
-                ssl=ssl_context,
-            )
-            return ClientSession(connector=connector,headers=headers)
-
-        # HTTP/HTTPS прокси
-        elif proxy_lower.startswith('http://') or proxy_lower.startswith('https://'):
-            connector = TCPConnector(ssl=ssl_context)
-            return ClientSession(
-                connector=connector,
-                proxy=self.proxy,
-                proxy_auth=self._get_proxy_auth(),
-                headers=headers
-            )
-
-        # Если схема не распознана, предполагаем HTTP
-        else:
-            connector = TCPConnector(ssl=ssl_context)
-            return ClientSession(
-                connector=connector,
-                proxy=f"http://{self.proxy}",
-                proxy_auth=self._get_proxy_auth(),
-                headers=headers
-            )
-
-    def _get_proxy_auth(self) -> Optional[tuple]:
-        """
-        Извлекает логин и пароль из строки прокси.
-        Возвращает кортеж (login, password) или None.
-        """
-        try:
-            # Ищем логин и пароль в формате login:password@
-            import re
-            match = re.search(r'://([^:]+):([^@]+)@', self.proxy)
-            if match:
-                return (match.group(1), match.group(2))
-        except Exception:
-            pass
-        return None
 
     def _init_request_body_factory(self) -> FactoryProtocol:
         return PydanticFactory()
