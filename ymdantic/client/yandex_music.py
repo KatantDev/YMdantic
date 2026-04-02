@@ -62,15 +62,20 @@ class YMClient(AiohttpClient):
         token: str,
         user_id: int | None = None,
         base_url: str = "https://api.music.yandex.net/",
+        proxy: str | None = None,  # Формат: scheme://login:password@ip:port
     ) -> None:
         self.user_id = user_id
+
+        headers = {
+            "Accept": "application/json",
+            "Authorization": f"OAuth {token}",
+            "X-Yandex-Music-Client": "YandexMusicAndroid/24023621",
+        }
+
         super().__init__(
             base_url=base_url,
-            headers={
-                "Accept": "application/json",
-                "Authorization": f"OAuth {token}",
-                "X-Yandex-Music-Client": "YandexMusicAndroid/24023621",
-            },
+            headers=headers,
+            proxy=proxy,
         )
 
     def _init_request_body_factory(self) -> FactoryProtocol:

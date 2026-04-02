@@ -3,12 +3,21 @@ import urllib.parse
 from types import TracebackType
 from typing import Any, Optional, Self
 
-from aiohttp import ClientError, ClientSession, ClientTimeout, FormData
+from aiohttp import ClientError, ClientSession, ClientTimeout, FormData, TCPConnector
 from dataclass_rest.base_client import BaseClient
 from dataclass_rest.exceptions import ClientLibraryError
 from dataclass_rest.http_request import HttpRequest
 
 from ymdantic.client.session.aiohttp_method import YMHttpMethod
+
+try:
+    from aiohttp_socks import ProxyConnector
+except ImportError as e:
+    raise ImportError(
+        "Warning: aiohttp_socks not installed. "
+        "SOCKS proxies will not work. "
+        "Install with: pip install aiohttp_socks",
+    ) from e
 
 
 class AiohttpClient(BaseClient):
@@ -22,14 +31,64 @@ class AiohttpClient(BaseClient):
         session: Optional[ClientSession] = None,
         headers: Optional[dict[str, Any]] = None,
         timeout: Optional[ClientTimeout] = None,
+        proxy: Optional[str] = None,
     ) -> None:
         super().__init__()
         self.base_url = base_url
         self.headers = headers or {}
+        self.proxy = proxy
+        self.timeout = timeout
 
-        self._session = session or ClientSession(
+        self._session = session or self._create_session(headers=headers)
+
+    def _create_session(self, headers: dict[str, Any] | None) -> ClientSession:
+        """
+        Создает ClientSession с учетом прокси.
+
+        Поддерживает HTTP, HTTPS и SOCKS прокси (4, 4a, 5).
+
+        :param headers:
+        :return: aiohttp ClientSession.
+        """
+        if self.proxy is None:
+            return ClientSession(
+                headers=headers,
+                timeout=self.timeout or ClientTimeout(total=0),
+            )
+
+        # Определяем тип прокси по схеме
+        proxy_lower = self.proxy.lower()
+
+        # SOCKS прокси (поддерживаются socks4, socks4a, socks5, socks5h)
+        if any(
+            scheme in proxy_lower
+            for scheme in ["socks4", "socks5", "socks5h", "socks4a"]
+        ):
+            # Используем ProxyConnector для SOCKS
+            connector = ProxyConnector.from_url(self.proxy)
+            return ClientSession(
+                connector=connector,
+                headers=headers,
+                timeout=self.timeout or ClientTimeout(total=0),
+            )
+
+        # HTTP/HTTPS прокси
+        if proxy_lower.startswith(("http://", "https://")):
+            connector = TCPConnector()
+            return ClientSession(
+                connector=connector,
+                proxy=self.proxy,
+                headers=headers,
+                timeout=self.timeout or ClientTimeout(total=0),
+            )
+
+        # Если схема не распознана, предполагаем HTTP
+        connector = TCPConnector()
+        return ClientSession(
+            connector=connector,
+            proxy=f"http://{self.proxy}",
             headers=headers,
-            timeout=timeout or ClientTimeout(total=0),
+            timeout=self.timeout or ClientTimeout(total=0),
         )
 
     async def close(self) -> None:
