@@ -10,15 +10,6 @@ from dataclass_rest.http_request import HttpRequest
 
 from ymdantic.client.session.aiohttp_method import YMHttpMethod
 
-try:
-    from aiohttp_socks import ProxyConnector
-except ImportError as e:
-    raise ImportError(
-        "Warning: aiohttp_socks not installed. "
-        "SOCKS proxies will not work. "
-        "Install with: pip install aiohttp_socks",
-    ) from e
-
 
 class AiohttpClient(BaseClient):
     """Базовый клиент для работы с API через aiohttp."""
@@ -55,6 +46,15 @@ class AiohttpClient(BaseClient):
                 headers=headers,
                 timeout=self.timeout or ClientTimeout(total=0),
             )
+
+        try:
+            from aiohttp_socks import ProxyConnector  # noqa: PLC0415
+        except ImportError as e:
+            raise ImportError(
+                "Warning: aiohttp_socks not installed. "
+                "SOCKS proxies will not work. "
+                "Install with: pip install aiohttp_socks",
+            ) from e
 
         # Определяем тип прокси по схеме
         proxy_lower = self.proxy.lower()
