@@ -3,9 +3,11 @@ name: Testing YMdantic
 on:
   push:
   pull_request:
+  pull_request_target:
 
 jobs:
   lint:
+    if: github.event_name != 'pull_request_target'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -38,6 +40,7 @@ jobs:
         run: uv run ${{ matrix.check.cmd }}
 
   test:
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     environment: pull_requests
     strategy:
@@ -49,6 +52,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
 
       - name: Install uv
         uses: astral-sh/setup-uv@v7
