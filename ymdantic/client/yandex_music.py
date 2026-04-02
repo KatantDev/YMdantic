@@ -61,7 +61,7 @@ class YMClient(AiohttpClient):
         token: str,
         user_id: int | None = None,
         base_url: str = "https://api.music.yandex.net/",
-        proxy: str | None = None, # Формат: scheme://login:password@ip:port
+        proxy: str | None = None,  # Формат: scheme://login:password@ip:port
     ) -> None:
         self.user_id = user_id
 
@@ -74,7 +74,7 @@ class YMClient(AiohttpClient):
         super().__init__(
             base_url=base_url,
             headers=headers,
-            proxy=proxy
+            proxy=proxy,
         )
 
     def _init_request_body_factory(self) -> FactoryProtocol:
