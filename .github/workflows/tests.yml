@@ -1,6 +1,8 @@
 name: Testing YMdantic
 
-on: push
+on:
+  push:
+  pull_request:
 
 jobs:
   lint:
@@ -16,8 +18,6 @@ jobs:
             cmd: ruff check ymdantic tests
           - name: Mypy
             cmd: mypy ymdantic tests
-          - name: Pytest
-            cmd: pytest -vv tests
 
     name: "${{ matrix.check.name }} (py${{ matrix.python-version }})"
 
@@ -35,6 +35,32 @@ jobs:
         run: uv sync --locked --all-groups
 
       - name: Run check
+        run: uv run ${{ matrix.check.cmd }}
+
+  test:
+    runs-on: ubuntu-latest
+    environment: pull_requests
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.12", "3.13", "3.14"]
+
+    name: "Pytest (py${{ matrix.python-version }})"
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          version: "0.9.17"
+          python-version: ${{ matrix.python-version }}
+          enable-cache: true
+
+      - name: Install deps
+        run: uv sync --locked --all-groups
+
+      - name: Run Pytest
         env:
           YM_TOKEN: ${{ secrets.YM_TOKEN }}
-        run: uv run ${{ matrix.check.cmd }}
+        run: uv run pytest -vv tests
