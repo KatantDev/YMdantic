@@ -81,6 +81,8 @@ class BaseTrack(YMBaseModel, DeprecatedMixin):
     best: bool | None = None
     # Является ли трек лучшим (поле доступно при получении альбома с треками
     # `get_album_with_tracks`).
+    listening_finished: bool | None = None
+    # Флаг, указывающий, завершено ли прослушивание альбома.
 
     @property
     def artists_names(self) -> str | None:
@@ -131,7 +133,7 @@ class UnavailableTrack(BaseTrack):
 
     type: Literal["music", "asmr", "audiobook", "noise", "fairy-tale"]
     # Тип трека.
-    available: Literal[False]
+    available: Literal[False] = False
     # Доступность трека. В данном случае трек недоступен.
     error: Literal["no-rights"] | None = None
     # Ошибка, связанная с треком. В данном случае может быть ошибка
@@ -165,7 +167,7 @@ class Track(BaseTrack):
 
     type: Literal["music", "asmr", "audiobook", "noise", "fairy-tale"]
     # Тип трека.
-    available: Literal[True]
+    available: bool = True
     # Доступность трека. В данном случае трек доступен.
     title: str
     # Название трека.

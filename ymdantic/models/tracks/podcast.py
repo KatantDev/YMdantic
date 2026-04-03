@@ -1,7 +1,9 @@
 """Модели подкастов."""
 
 from datetime import date
-from typing import Literal
+from typing import Any, Literal
+
+from pydantic import model_validator
 
 from ymdantic.mixins import DeprecatedMixin
 from ymdantic.models.tracks.album import TrackAlbum
@@ -24,6 +26,17 @@ class UnavailablePodcast(UnavailableTrack, DeprecatedMixin):
     # Дата публикации подкаста (если есть).
     short_description: str | None = None
     # Краткое описание подкаста (если есть).
+
+    @model_validator(mode="before")
+    @classmethod
+    def validate_not_available(cls, data: dict[str, Any]) -> dict[str, Any]:
+        """Убеждаемся, что это действительно недоступный трек."""
+        # Если трек доступен и это не подкаст-эпизод — не используем эту модель
+        if data.get("available") is True and data.get("type") != "podcast-episode":
+            raise ValueError(
+                f"Available track {data.get('id')} should not be UnavailablePodcast",
+            )
+        return data
 
 
 class Podcast(Track):
