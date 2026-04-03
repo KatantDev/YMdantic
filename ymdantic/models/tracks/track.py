@@ -133,7 +133,7 @@ class UnavailableTrack(BaseTrack):
 
     type: Literal["music", "asmr", "audiobook", "noise", "fairy-tale"]
     # Тип трека.
-    available: Literal[False] = False
+    available: Literal[False]
     # Доступность трека. В данном случае трек недоступен.
     error: Literal["no-rights"] | None = None
     # Ошибка, связанная с треком. В данном случае может быть ошибка
@@ -167,7 +167,7 @@ class Track(BaseTrack):
 
     type: Literal["music", "asmr", "audiobook", "noise", "fairy-tale"]
     # Тип трека.
-    available: bool = True
+    available: Literal[True]
     # Доступность трека. В данном случае трек доступен.
     title: str
     # Название трека.

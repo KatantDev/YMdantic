@@ -10,7 +10,7 @@ from ymdantic.models.tracks.podcast import Podcast, UnavailablePodcast
 from ymdantic.models.tracks.r128 import R128
 from ymdantic.models.tracks.track import Track, UnavailableTrack
 
-TrackType = Union[Track, UnavailableTrack, Podcast, UnavailablePodcast]
+TrackType = Union[UnavailablePodcast, Podcast, Track, UnavailableTrack]
 
 __all__ = (
     "R128",
