@@ -12,5 +12,4 @@ class TrackAlbum(BaseAlbum):
     # Дата начала альбома.
     track_position: Optional[TrackPosition] = None
     # Позиция трека в альбоме (если есть).
-    listening_finished: Optional[bool] = None
-    # Флаг, указывающий, завершено ли прослушивание альбома.
+    listening_finished: bool | None = None
