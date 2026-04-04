@@ -81,6 +81,8 @@ class BaseTrack(YMBaseModel, DeprecatedMixin):
     best: bool | None = None
     # Является ли трек лучшим (поле доступно при получении альбома с треками
     # `get_album_with_tracks`).
+    listening_finished: bool | None = None
+    # Флаг, указывающий, завершено ли прослушивание альбома.
 
     @property
     def artists_names(self) -> str | None:
