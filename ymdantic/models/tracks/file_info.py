@@ -61,8 +61,8 @@ class FileInfo(YMBaseModel):
     # Транспорт файла.
     key: str | None = None
     # Ключ файла. При использовании шифрования.
-    size: int
-    # Размер файла.
+    size: int | None = None
+    # Размер файла. Яндекс перестал его присылать.
     gain: bool
     # Флаг для нормализации громкости трека (видимо).
     urls: list[HttpUrl]
