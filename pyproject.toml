@@ -1,6 +1,6 @@
 [project]
 name = "ymdantic"
-version = "0.2.3"
+version = "0.2.4"
 description = "Фреймворк предоставляющий доступ к API Яндекс Музыки (с Pydantic валидацией)"
 authors = [{ name = "KatantDev", email = "vlad26@mail.ru" }]
 requires-python = ">=3.12,<3.15"
@@ -8,7 +8,6 @@ readme = "README.md"
 dependencies = [
     "aiohttp>=3.9.0,<4",
     "pydantic>=2.4,<3",
-    "certifi>=2025,<2026",
     "strenum>=0.4.15,<0.5",
     "dataclass-rest>=0.5.0",
 ]
