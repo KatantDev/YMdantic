@@ -66,8 +66,8 @@ class AccountSettings(YMBaseModel):
     # Дата последнего изменения настроек.
     rbt_disabled: bool
     # Отключены ли РБТ.
-    theme: Literal["black", "white"]
-    # Тема.
+    theme: Literal["black", "white", "default"]
+    # Тема. "default" - тема по умолчанию (как в системе).
     promos_disabled: bool
     # Отключены ли промо-акции.
     auto_play_radio: bool
