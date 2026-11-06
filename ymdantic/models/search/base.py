@@ -51,8 +51,8 @@ class SearchFilter(YMBaseModel):
 class SearchPager(YMBaseModel):
     """Пагинатор для поиска."""
 
-    total: int
-    # Общее количество элементов.
+    total: int | None = None
+    # Общее количество элементов. Яндекс перестал его присылать.
     per_page: int
     # Количество элементов на странице.
     last_page: bool

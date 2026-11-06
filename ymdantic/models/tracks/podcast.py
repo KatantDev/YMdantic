@@ -29,8 +29,9 @@ class UnavailablePodcast(UnavailableTrack, DeprecatedMixin):
 class Podcast(Track):
     """Модель информации о доступном подкасте."""
 
-    type: Literal["podcast-episode", "comment"]  # type: ignore[assignment]
-    # Тип трека. Возможные значения: "podcast-episode", "comment".
+    type: Literal["podcast-episode", "comment", "audiobook"]  # type: ignore[assignment]
+    # Тип трека. Возможные значения: "podcast-episode", "comment", "audiobook"
+    # (глава аудиокниги).
     albums: list[TrackAlbum]
     # Список альбомов, в которых присутствует подкаст.
     podcast_episode_type: PodcastEpisodeType | None = None

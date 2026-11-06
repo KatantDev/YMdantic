@@ -50,15 +50,16 @@ class SimilarArtist(ShortArtist):
 
     counts: Counts
     # Счетчики артиста (количество треков, альбомов).
-    tickets_available: bool
+    tickets_available: bool | None = None
     # Флаг, указывающий, доступны ли билеты на концерты артиста.
+    # В результатах поиска отсутствует.
 
 
 class Artist(SimilarArtist):
     """Pydantic модель, представляющая подробную информацию об артисте."""
 
-    og_image: str
-    # OG изображение артиста.
+    og_image: str | None = None
+    # OG изображение артиста (может отсутствовать).
     ratings: Ratings | None = None  # TODO: Проверить может ли быть None у доступных
     # Рейтинги артиста.
     links: list[SocialLink]
@@ -70,11 +71,14 @@ class Artist(SimilarArtist):
     extra_actions: list[ExtraAction]
     # Список дополнительных действий, связанных с артистом.
 
-    def get_og_image_url(self, size: str = "200x200") -> HttpUrl:
+    def get_og_image_url(self, size: str = "200x200") -> HttpUrl | None:
         """
         Возвращает URL OG-изображения артиста с заданным размером.
 
         :param size: Размер изображения.
-        :return: URL OG-изображения артиста с заданным размером.
+        :return: URL OG-изображения артиста с заданным размером или None, если
+            изображения нет.
         """
+        if self.og_image is None:
+            return None
         return HttpUrl(f"https://{self.og_image.replace('%%', size)}")

@@ -1,6 +1,6 @@
-from typing import Literal
+from typing import Annotated
 
-from pydantic import HttpUrl
+from pydantic import Field, HttpUrl
 
 from ymdantic.mixins import DeprecatedMixin
 from ymdantic.models.artists.artist import ShortArtist
@@ -14,22 +14,22 @@ class Clip(YMBaseModel, DeprecatedMixin):
     # Уникальный идентификатор клипа.
     title: str
     # Название клипа.
-    version: str
-    # Версия клипа.
+    version: str | None = None
+    # Версия клипа (может отсутствовать).
     player_id: str
     # ID плеера клипа.
     uuid: str
     # UUID клипа.
     thumbnail: HttpUrl
     # Ссылка на обложку клипа.
-    preview_url: HttpUrl
-    # Ссылка на превью клипа (видео).
+    preview_url: HttpUrl | None = None
+    # Ссылка на превью клипа (видео, может отсутствовать).
     duration: int
     # Длительность клипа.
     artists: list[ShortArtist]
     # Список артистов, участвующих в клипе.
-    disclaimers: list[Literal[""]]  # TODO: Проверить, что тут может быть.
-    # Список отказов от ответственности клипа.
+    disclaimers: Annotated[list[str], Field(default_factory=list)]
+    # Список отказов от ответственности клипа, например "explicit".
     explicit: bool
     # Флаг, указывающий, содержит ли клип нецензурную лексику.
 

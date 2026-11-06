@@ -1,9 +1,15 @@
 import pytest
 from ymdantic import YMClient
+from ymdantic.models.search import SearchInstantMixedResponse
 from ymdantic.models.search.results import (
     AlbumSearchResult,
     ArtistSearchResult,
+    ClipSearchResult,
+    PlaylistSearchResult,
+    PodcastAlbumSearchResult,
+    PodcastSearchResult,
     TrackSearchResult,
+    UnknownSearchResult,
 )
 
 XOLIDAYBOY_ARTIST_ID = 10878798
@@ -14,7 +20,6 @@ async def test_search_instant_mixed(client: YMClient) -> None:
     response = await client.search_instant_mixed(text="xolidayboy")
     assert response.text == "xolidayboy"
     assert len(response.results) > 0
-    assert response.total > 0
     assert response.per_page > 0
     assert isinstance(response.search_request_id, str)
     assert isinstance(response.misspell_corrected, bool)
@@ -47,14 +52,9 @@ async def test_search_has_track_results(client: YMClient) -> None:
 async def test_search_result_types(client: YMClient) -> None:
     response = await client.search_instant_mixed(text="xolidayboy")
     for result in response.results:
-        expected_types = (
-            "track",
-            "artist",
-            "album",
-            "podcast_episode",
-            "playlist",
+        assert not isinstance(result, UnknownSearchResult), (
+            f"No model for search result type {result.type!r}"
         )
-        assert result.type in expected_types
 
 
 @pytest.mark.anyio
@@ -137,5 +137,68 @@ async def test_search_gibberish_returns_no_results(client: YMClient) -> None:
     response = await client.search_instant_mixed(
         text="zzzqqq999xxx888jjj777",
     )
-    assert response.total == 0
     assert len(response.results) == 0
+
+
+@pytest.mark.anyio
+async def test_search_with_filter_playlist(client: YMClient) -> None:
+    response = await client.search_instant_mixed(
+        text="xolidayboy",
+        filter="playlist",
+    )
+    assert len(response.results) > 0
+    for result in response.results:
+        assert isinstance(result, PlaylistSearchResult)
+
+
+@pytest.mark.anyio
+async def test_search_with_filter_podcast(client: YMClient) -> None:
+    response = await client.search_instant_mixed(
+        text="подкаст",
+        filter="podcast",
+    )
+    assert len(response.results) > 0
+    for result in response.results:
+        assert isinstance(result, PodcastAlbumSearchResult)
+        assert result.podcast.meta_type == "podcast"
+
+
+@pytest.mark.anyio
+async def test_search_with_filter_book(client: YMClient) -> None:
+    response = await client.search_instant_mixed(
+        text="гарри поттер",
+        filter="book",
+    )
+    assert len(response.results) > 0
+    for result in response.results:
+        assert isinstance(result, (PodcastAlbumSearchResult, PodcastSearchResult))
+
+
+@pytest.mark.anyio
+async def test_search_with_filter_clip(client: YMClient) -> None:
+    response = await client.search_instant_mixed(
+        text="xolidayboy",
+        filter="clip",
+    )
+    assert len(response.results) > 0
+    for result in response.results:
+        assert isinstance(result, ClipSearchResult)
+        assert result.clip.title
+
+
+def test_unknown_result_type_does_not_break_response() -> None:
+    response = SearchInstantMixedResponse.model_validate(
+        {
+            "searchRequestId": "request",
+            "text": "xolidayboy",
+            "misspellCorrected": False,
+            "responseType": "mixed",
+            "perPage": 20,
+            "lastPage": True,
+            "results": [{"type": "concert", "concert": {"id": "1"}}],
+        },
+    )
+    [result] = response.results
+    assert isinstance(result, UnknownSearchResult)
+    assert result.type == "concert"
+    assert result.model_extra == {"concert": {"id": "1"}}
